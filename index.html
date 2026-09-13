@@ -1,31 +1,959 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>staatsrat.me</title>
+    <title>STAATSRAT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
-        body {
-            background-color: #000000;
-            color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        /* --- RESET & BASE --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #0A0A0A;
+            color: #F5F5F5;
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        /* --- CUSTOM CURSOR --- */
+        .cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 8px;
+            background-color: #F5F5F5;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                        height 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                        background-color 0.3s ease;
+            mix-blend-mode: difference;
+        }
+
+        .cursor.hover-active {
+            width: 60px;
+            height: 60px;
+            background-color: #E60000;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 2.5rem;
+            right: 3rem;
+            z-index: 10000;
+            display: flex;
+            gap: 2.5rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 500;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #F5F5F5;
+            position: relative;
+            padding-bottom: 4px;
+            transition: color 0.3s ease;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: #E60000;
+            transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        nav a:hover {
+            color: #E60000;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        nav a.active {
+            color: #E60000;
+        }
+
+        nav a.active::after {
+            width: 100%;
+            background-color: #E60000;
+        }
+
+        /* --- SLIDE NUMBER --- */
+        .slide-number {
+            position: fixed;
+            bottom: 2rem;
+            right: 3rem;
+            z-index: 10000;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 500;
+            color: #555;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .slide-number .current {
+            color: #F5F5F5;
+        }
+
+        /* --- SLIDE CONTAINER --- */
+        .slide-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- SLIDES --- */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            padding: 6rem 3rem;
+            background-color: #0A0A0A;
+            transition: transform 0.9s cubic-bezier(0.77, 0, 0.175, 1);
+            will-change: transform;
+            transform: translateY(100%);
+            box-shadow: 0 -20px 40px rgba(0,0,0,0.6);
         }
 
-        h1 {
-            font-size: 2.5rem;
+        .slide.active {
+            transform: translateY(0);
+        }
+
+        /* --- CONTENT REVEAL (for scroll up) --- */
+        .slide.revealing .hero-content,
+        .slide.revealing .section-content {
+            animation: contentReveal 0.9s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+        }
+
+        @keyframes contentReveal {
+            0% {
+                opacity: 0.3;
+                transform: translateY(25px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- HERO SLIDE --- */
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 100%;
+            max-width: 1400px;
+            align-items: center;
+            gap: 2rem;
+            position: relative;
+            z-index: 3;
+        }
+
+        .text-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            z-index: 4;
+            padding-left: 0;
+            margin-top: 2rem;
+            justify-self: start;
+        }
+
+        .brand-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3.5rem, 7vw, 6.5rem);
             font-weight: 400;
-            letter-spacing: 2px;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            position: relative;
+            display: inline-block;
+        }
+
+        /* --- GLITCH EFFECT --- */
+        .brand-title::before,
+        .brand-title::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            overflow: hidden;
+            clip: rect(0, 900px, 0, 0);
+            pointer-events: none;
+        }
+
+        .brand-title::before {
+            left: 2px;
+            text-shadow: -2px 0 #E60000;
+            animation: glitch-anim-1 3s infinite linear alternate-reverse;
+        }
+
+        .brand-title::after {
+            left: -2px;
+            text-shadow: 2px 0 #F5F5F5;
+            animation: glitch-anim-2 2.5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim-1 {
+            0% { clip: rect(20px, 9999px, 15px, 0); }
+            20% { clip: rect(50px, 9999px, 80px, 0); }
+            40% { clip: rect(10px, 9999px, 40px, 0); }
+            60% { clip: rect(80px, 9999px, 20px, 0); }
+            80% { clip: rect(30px, 9999px, 70px, 0); }
+            100% { clip: rect(60px, 9999px, 10px, 0); }
+        }
+
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(10px, 9999px, 50px, 0); }
+            20% { clip: rect(70px, 9999px, 20px, 0); }
+            40% { clip: rect(30px, 9999px, 90px, 0); }
+            60% { clip: rect(50px, 9999px, 10px, 0); }
+            80% { clip: rect(20px, 9999px, 60px, 0); }
+            100% { clip: rect(80px, 9999px, 30px, 0); }
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            font-weight: 300;
+            color: #888;
+            max-width: 400px;
+            letter-spacing: 0.02em;
+        }
+
+        .links {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .links a {
+            text-decoration: none;
+            color: #F5F5F5;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 500;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: #F5F5F5;
+            transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .links a:hover::after {
+            width: 100%;
+        }
+
+        /* --- DICE --- */
+        .dice-wrapper {
+            position: absolute;
+            top: -15%;
+            right: -10%;
+            width: 110vh;
+            height: 110vh;
+            z-index: 2;
+            pointer-events: none;
+            transform: rotate(55deg);
+            opacity: 0.7;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+
+        .dice-wrapper.konami {
+            transform: rotate(415deg);
+            opacity: 1;
+        }
+
+        .dice-svg {
+            width: 100%;
+            height: 100%;
+            fill: #7A0000;
+            transition: fill 0.5s ease;
+        }
+
+        .dice-wrapper.konami .dice-svg {
+            fill: #E60000;
+        }
+
+        .dice-dot {
+            fill: #0A0A0A;
+        }
+
+        /* --- ASYMMETRIC POSITIONS --- */
+        .section-content {
+            max-width: 800px;
+            text-align: left;
+            z-index: 2;
+            position: relative;
+            width: 100%;
+            padding: 0 4rem;
+        }
+
+        .slide[data-index="1"] .section-content {
+            align-self: flex-end;
+            padding-bottom: 6rem;
+        }
+
+        .slide[data-index="2"] .section-content {
+            align-self: flex-start;
+            padding-top: 6rem;
+            text-align: right;
+            margin-left: auto;
+            padding-right: 6rem;
+        }
+
+        .slide[data-index="3"] .section-content {
+            align-self: center;
+            padding-left: 6rem;
+        }
+
+        /* --- CONTACT SLIDE --- */
+        .slide[data-index="4"] .section-content {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1400px;
+            padding: 0 4rem;
+            gap: 4rem;
+        }
+
+        .slide[data-index="4"] .section-content h2 {
+            order: 1;
+            text-align: left;
+            margin-bottom: 0;
+            flex-shrink: 0;
+        }
+
+        .slide[data-index="4"] .contact-details {
+            order: 2;
+            text-align: right;
+            margin-top: 0;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2.5rem;
+        }
+
+        .section-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 4rem);
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+
+        .section-content p {
+            color: #888;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .section-content a {
+            color: #F5F5F5;
+            text-decoration: none;
+            border-bottom: 1px solid #333;
+            transition: border-color 0.3s ease, color 0.3s ease;
+        }
+
+        .section-content a:hover {
+            color: #E60000;
+            border-color: #E60000;
+        }
+
+        /* --- PROJECT LIST --- */
+        .project-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .project-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .project-item .project-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #F5F5F5;
+            text-decoration: none;
+            border-bottom: 1px solid #333;
+            transition: border-color 0.3s ease, color 0.3s ease;
+            display: inline-block;
+            width: fit-content;
+        }
+
+        .project-item .project-name:hover {
+            color: #E60000;
+            border-color: #E60000;
+        }
+
+        .project-item .project-desc {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* --- CONTACT DETAILS --- */
+        .contact-details {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .contact-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            align-items: flex-end;
+        }
+
+        .contact-group .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #555;
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+        }
+
+        .contact-group a,
+        .contact-group span {
+            color: #F5F5F5;
+            text-decoration: none;
+            font-size: 1.05rem;
+            transition: color 0.3s ease;
+            display: inline-block;
+            width: fit-content;
+        }
+
+        .contact-group a {
+            border-bottom: 1px solid #333;
+            padding-bottom: 2px;
+        }
+
+        .contact-group a:hover {
+            color: #E60000;
+            border-color: #E60000;
+        }
+
+        .contact-group span {
+            color: #888;
+        }
+
+        /* --- LAPTOP OPTIMIZATION --- */
+        @media (max-width: 1440px) {
+            .brand-title {
+                font-size: clamp(3rem, 6vw, 5.5rem);
+            }
+            
+            .dice-wrapper {
+                width: 95vh;
+                height: 95vh;
+                top: -10%;
+                right: -8%;
+                opacity: 0.65;
+            }
+        }
+
+        /* --- TABLET & MOBILE --- */
+        @media (max-width: 900px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 3rem;
+                padding-top: 6rem;
+            }
+
+            nav {
+                top: 1.5rem;
+                right: 1.5rem;
+                gap: 1.5rem;
+                font-size: 0.7rem;
+            }
+
+            .slide-number {
+                bottom: 1.5rem;
+                right: 1.5rem;
+                font-size: 0.65rem;
+            }
+
+            .text-content {
+                align-items: center;
+                justify-self: center;
+                margin-top: 0;
+            }
+
+            .subtitle {
+                text-align: center;
+            }
+
+            .links {
+                justify-content: center;
+            }
+
+            .dice-wrapper {
+                top: -20%;
+                right: -30%;
+                width: 90vw;
+                height: 90vw;
+                opacity: 0.4;
+            }
+
+            .section-content {
+                text-align: center;
+                padding: 0 1.5rem;
+                align-self: center !important;
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                margin-left: 0 !important;
+            }
+
+            .slide[data-index="1"] .section-content,
+            .slide[data-index="2"] .section-content,
+            .slide[data-index="3"] .section-content {
+                text-align: center;
+                padding: 0 1.5rem;
+            }
+
+            .slide[data-index="4"] .section-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 2.5rem;
+                padding: 0 1.5rem;
+            }
+
+            .slide[data-index="4"] .section-content h2 {
+                order: 0;
+                text-align: center;
+            }
+
+            .slide[data-index="4"] .contact-details {
+                text-align: center;
+                align-items: center;
+                gap: 2rem;
+            }
+
+            .contact-details {
+                align-items: center;
+            }
+
+            .contact-group {
+                align-items: center;
+            }
+
+            .project-item .project-name {
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav {
+                gap: 1rem;
+                font-size: 0.6rem;
+            }
+            
+            .brand-title {
+                font-size: 3rem;
+            }
+            
+            .slide {
+                padding: 4rem 1.5rem;
+            }
+        }
+
+        /* --- REDUCED MOTION --- */
+        @media (prefers-reduced-motion: reduce) {
+            .slide,
+            .cursor,
+            .dice-wrapper,
+            .slide.revealing .hero-content,
+            .slide.revealing .section-content {
+                transition: none !important;
+                animation: none !important;
+            }
         }
     </style>
 </head>
 <body>
 
-    <h1>Staatsrat</h1>
+    <div class="cursor"></div>
 
+    <nav>
+        <a href="#" data-target="0" class="active">Home</a>
+        <a href="#" data-target="1">Work</a>
+        <a href="#" data-target="2">Projects</a>
+        <a href="#" data-target="3">About</a>
+        <a href="#" data-target="4">Contact</a>
+    </nav>
+
+    <div class="slide-container" id="slideContainer">
+
+        <!-- SLIDE 0: HERO -->
+        <div class="slide active" data-index="0">
+            <div class="dice-wrapper" id="diceWrapper">
+                <svg class="dice-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="20" y="20" width="160" height="160" rx="20" fill="#7A0000" />
+                    <circle cx="65" cy="60" r="14" fill="#0A0A0A" />
+                    <circle cx="135" cy="60" r="14" fill="#0A0A0A" />
+                    <circle cx="65" cy="100" r="14" fill="#0A0A0A" />
+                    <circle cx="135" cy="100" r="14" fill="#0A0A0A" />
+                    <circle cx="65" cy="140" r="14" fill="#0A0A0A" />
+                    <circle cx="135" cy="140" r="14" fill="#0A0A0A" />
+                    <rect x="20" y="20" width="160" height="160" rx="20" fill="url(#gradient)" opacity="0.2" />
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.2" />
+                            <stop offset="100%" style="stop-color:#000000;stop-opacity:0.4" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+
+            <div class="hero-content">
+                <div class="text-content">
+                    <h1 class="brand-title" data-text="STAATSRAT">STAATSRAT</h1>
+                    <p class="subtitle">
+                        Digital minimalism. Security research. Open source contributions.
+                    </p>
+                    <div class="links">
+                        <a href="https://github.com/Staatsrat" target="_blank">GitHub</a>
+                        <a href="https://x.com/staatsratx" target="_blank">X</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 1: WORK -->
+        <div class="slide" data-index="1">
+            <div class="section-content">
+                <h2>Selected Work</h2>
+                <div class="project-list">
+                    <div class="project-item">
+                        <a href="https://github.com/Staatsrat/icmp_c2" target="_blank" class="project-name">icmp_c2</a>
+                        <span class="project-desc">Covert C2 channel over ICMP packet sizes. Commands are encoded in the echo request length — no payload needed.</span>
+                    </div>
+                    <div class="project-item">
+                        <a href="https://github.com/Staatsrat/Social_Framework" target="_blank" class="project-name">Social_Framework</a>
+                        <span class="project-desc">Website cloning and data collection tool for security testing. Collects GPS, browser info, or executes commands via realistic phishing banners.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: PROJECTS -->
+        <div class="slide" data-index="2">
+            <div class="section-content">
+                <h2>Projects</h2>
+                <p>
+                    always learning — trying to get encryption into icmp_c2...
+                </p>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: ABOUT -->
+        <div class="slide" data-index="3">
+            <div class="section-content">
+                <h2>About</h2>
+                <p>
+                    Love testing things, ways they break, how they broke, 
+                    and how to do it again with less effort.
+                </p>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: CONTACT -->
+        <div class="slide" data-index="4">
+            <div class="section-content">
+                <h2>Contact</h2>
+                <div class="contact-details">
+                    <div class="contact-group">
+                        <span class="label">Email</span>
+                        <span>staatsrat@staatsrat.me</span>
+                    </div>
+                    <div class="contact-group">
+                        <span class="label">Web</span>
+                        <a href="https://staatsrat.me" target="_blank">staatsrat.me</a>
+                    </div>
+                    <div class="contact-group">
+                        <span class="label">Social</span>
+                        <a href="https://x.com/staatsratx" target="_blank">x.com/staatsratx</a>
+                        <a href="https://www.reddit.com/user/staatsrat/" target="_blank">reddit.com/user/staatsrat</a>
+                        <a href="https://www.youtube.com/@staatsrat" target="_blank">youtube.com/@staatsrat</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="slide-number">
+        <span class="current" id="currentSlide">01</span> / <span id="totalSlides">05</span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cursor = document.querySelector('.cursor');
+            const links = document.querySelectorAll('a');
+            const slides = document.querySelectorAll('.slide');
+            const currentSlideEl = document.getElementById('currentSlide');
+            const totalSlidesEl = document.getElementById('totalSlides');
+            const diceWrapper = document.getElementById('diceWrapper');
+            const navLinks = document.querySelectorAll('nav a');
+            
+            let currentSlide = 0;
+            const totalSlides = slides.length;
+            let isAnimating = false;
+
+            totalSlidesEl.textContent = String(totalSlides).padStart(2, '0');
+
+            // === Z-INDEX HELPER ===
+            function updateZIndexes(activeIndex) {
+                slides.forEach((slide, i) => {
+                    if (i === activeIndex) {
+                        slide.style.zIndex = 100;
+                    } else if (i < activeIndex) {
+                        slide.style.zIndex = 100 - (activeIndex - i);
+                    } else {
+                        slide.style.zIndex = 50 - (i - activeIndex);
+                    }
+                });
+            }
+
+            // Initial setup
+            updateZIndexes(0);
+
+            // 1. Custom Cursor
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+
+            // 2. Hover effect
+            links.forEach(link => {
+                link.addEventListener('mouseenter', () => {
+                    cursor.classList.add('hover-active');
+                });
+                link.addEventListener('mouseleave', () => {
+                    cursor.classList.remove('hover-active');
+                });
+            });
+
+            // 3. Slide function
+            function goToSlide(index) {
+                if (isAnimating) return;
+                
+                if (index < 0) index = 0;
+                if (index >= totalSlides) index = totalSlides - 1;
+                if (index === currentSlide) return;
+
+                isAnimating = true;
+
+                const oldSlide = slides[currentSlide];
+                const newSlide = slides[index];
+
+                if (index > currentSlide) {
+                    // === SCROLL DOWN ===
+                    // Hide all slides between current and target (they should be at 100%)
+                    for (let i = currentSlide + 1; i < index; i++) {
+                        slides[i].style.transition = 'none';
+                        slides[i].style.transform = 'translateY(100%)';
+                    }
+                    
+                    // Target slide must start from below
+                    newSlide.style.transition = 'none';
+                    newSlide.style.transform = 'translateY(100%)';
+                    
+                    // Force reflow
+                    void slides[0].offsetHeight;
+                    
+                    // Re-enable transitions
+                    for (let i = currentSlide + 1; i < index; i++) {
+                        slides[i].style.transition = '';
+                    }
+                    newSlide.style.transition = '';
+                    
+                    // Animate target up
+                    newSlide.style.zIndex = 9000;
+                    newSlide.style.transform = 'translateY(0)';
+                } else {
+                    // === SCROLL UP ===
+                    // Target slide must be visible underneath (translateY(0))
+                    newSlide.style.transition = 'none';
+                    newSlide.style.transform = 'translateY(0)';
+                    
+                    // Hide all slides between target and current (they're behind, not visible)
+                    for (let i = index + 1; i < currentSlide; i++) {
+                        slides[i].style.transition = 'none';
+                        slides[i].style.transform = 'translateY(100%)';
+                    }
+                    
+                    // Force reflow
+                    void slides[0].offsetHeight;
+                    
+                    // Re-enable transitions
+                    newSlide.style.transition = '';
+                    for (let i = index + 1; i < currentSlide; i++) {
+                        slides[i].style.transition = '';
+                    }
+                    
+                    // Old slide slides down
+                    oldSlide.style.zIndex = 9000;
+                    void oldSlide.offsetHeight;
+                    oldSlide.style.transform = 'translateY(100%)';
+                    
+                    // Content reveal animation on the newly-revealed slide
+                    newSlide.classList.add('revealing');
+                    setTimeout(() => {
+                        newSlide.classList.remove('revealing');
+                    }, 950);
+                }
+
+                navLinks.forEach((link, i) => {
+                    link.classList.toggle('active', i === index);
+                });
+
+                currentSlideEl.textContent = String(index + 1).padStart(2, '0');
+                currentSlide = index;
+
+                // After animation + buffer, reset z-indexes
+                setTimeout(() => {
+                    updateZIndexes(index);
+                    isAnimating = false;
+                }, 1100);
+            }
+
+            // 4. Scroll event
+            let scrollAccumulator = 0;
+            const SCROLL_THRESHOLD = 80;
+
+            window.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                if (isAnimating) return;
+
+                scrollAccumulator += e.deltaY;
+
+                if (Math.abs(scrollAccumulator) >= SCROLL_THRESHOLD) {
+                    if (scrollAccumulator > 0) {
+                        goToSlide(currentSlide + 1);
+                    } else {
+                        goToSlide(currentSlide - 1);
+                    }
+                    scrollAccumulator = 0;
+                }
+            }, { passive: false });
+
+            // 5. Navigation click
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (isAnimating) return;
+                    const targetIndex = parseInt(link.getAttribute('data-target'));
+                    if (!isNaN(targetIndex)) {
+                        goToSlide(targetIndex);
+                    }
+                });
+            });
+
+            // 6. Glitch effect
+            const title = document.querySelector('.brand-title');
+            title.addEventListener('mouseenter', () => {
+                title.style.animation = 'glitch-anim-1 0.2s infinite linear alternate-reverse';
+            });
+            title.addEventListener('mouseleave', () => {
+                title.style.animation = '';
+            });
+
+            // 7. Touch support
+            let touchStartY = 0;
+            let touchEndY = 0;
+
+            window.addEventListener('touchstart', (e) => {
+                touchStartY = e.changedTouches[0].screenY;
+            }, { passive: true });
+
+            window.addEventListener('touchend', (e) => {
+                touchEndY = e.changedTouches[0].screenY;
+                handleSwipe();
+            }, { passive: true });
+
+            function handleSwipe() {
+                if (isAnimating) return;
+                const swipeDistance = touchStartY - touchEndY;
+                const threshold = 50;
+
+                if (Math.abs(swipeDistance) > threshold) {
+                    if (swipeDistance > 0) {
+                        goToSlide(currentSlide + 1);
+                    } else {
+                        goToSlide(currentSlide - 1);
+                    }
+                }
+            }
+
+            // 8. Konami Code
+            const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+            let konamiIndex = 0;
+
+            window.addEventListener('keydown', (e) => {
+                if (e.key === konamiCode[konamiIndex] || e.key.toLowerCase() === konamiCode[konamiIndex]) {
+                    konamiIndex++;
+                    if (konamiIndex === konamiCode.length) {
+                        diceWrapper.classList.add('konami');
+                        setTimeout(() => {
+                            diceWrapper.classList.remove('konami');
+                        }, 2000);
+                        konamiIndex = 0;
+                    }
+                } else {
+                    konamiIndex = 0;
+                }
+            });
+        });
+    </script>
 </body>
 </html>
