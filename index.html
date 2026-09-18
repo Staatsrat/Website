@@ -13,19 +13,37 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            cursor: none;
         }
 
-        html, body {
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 7rem;
+        }
+
+        body {
             width: 100%;
-            height: 100%;
-            overflow: hidden;
             background-color: #0A0A0A;
             color: #F5F5F5;
             font-family: 'Inter', sans-serif;
             font-weight: 300;
             line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            cursor: none;
         }
+
+        a, button { cursor: none; }
+
+        ::selection {
+            background: #E60000;
+            color: #F5F5F5;
+        }
+
+        /* --- SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0A0A0A; }
+        ::-webkit-scrollbar-thumb { background: #222; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #E60000; }
 
         /* --- CUSTOM CURSOR --- */
         .cursor {
@@ -39,8 +57,8 @@
             pointer-events: none;
             z-index: 99999;
             transform: translate(-50%, -50%);
-            transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
-                        height 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+            transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                        height 0.3s cubic-bezier(0.25, 1, 0.5, 1),
                         background-color 0.3s ease;
             mix-blend-mode: difference;
         }
@@ -54,26 +72,55 @@
         /* --- NAVIGATION --- */
         nav {
             position: fixed;
-            top: 2.5rem;
-            right: 3rem;
-            z-index: 10000;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+            padding: 1.6rem 3rem;
+            background: rgba(10, 10, 10, 0.55);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.05rem;
+            letter-spacing: 0.02em;
+            color: #F5F5F5;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .nav-brand span { color: #E60000; }
+
+        .nav-links {
             display: flex;
             gap: 2.5rem;
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.15em;
             font-weight: 500;
+            overflow-x: auto;
+            scrollbar-width: none;
         }
 
-        nav a {
+        .nav-links::-webkit-scrollbar { display: none; }
+
+        .nav-links a {
             text-decoration: none;
             color: #F5F5F5;
             position: relative;
             padding-bottom: 4px;
+            white-space: nowrap;
             transition: color 0.3s ease;
         }
 
-        nav a::after {
+        .nav-links a::after {
             content: '';
             position: absolute;
             bottom: 0;
@@ -84,116 +131,79 @@
             transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        nav a:hover {
-            color: #E60000;
-        }
+        .nav-links a:hover { color: #E60000; }
+        .nav-links a:hover::after { width: 100%; }
 
-        nav a:hover::after {
+        .nav-links a.active { color: #E60000; }
+        .nav-links a.active::after { width: 100%; }
+
+        /* --- LAYOUT --- */
+        .container {
             width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 3rem;
         }
 
-        nav a.active {
-            color: #E60000;
-        }
-
-        nav a.active::after {
-            width: 100%;
-            background-color: #E60000;
-        }
-
-        /* --- SLIDE NUMBER --- */
-        .slide-number {
-            position: fixed;
-            bottom: 2rem;
-            right: 3rem;
-            z-index: 10000;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            font-weight: 500;
-            color: #555;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .slide-number .current {
-            color: #F5F5F5;
-        }
-
-        /* --- SLIDE CONTAINER --- */
-        .slide-container {
+        section {
+            padding: 9rem 0;
             position: relative;
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
         }
 
-        /* --- SLIDES --- */
-        .slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
+        .section-label {
             display: flex;
-            justify-content: center;
             align-items: center;
-            padding: 6rem 3rem;
-            background-color: #0A0A0A;
-            transition: transform 0.9s cubic-bezier(0.77, 0, 0.175, 1);
-            will-change: transform;
-            transform: translateY(100%);
-            box-shadow: 0 -20px 40px rgba(0,0,0,0.6);
+            gap: 1rem;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: #E60000;
+            font-weight: 500;
+            margin-bottom: 2rem;
         }
 
-        .slide.active {
-            transform: translateY(0);
+        .section-label::after {
+            content: '';
+            height: 1px;
+            width: 60px;
+            background: #E60000;
+            opacity: 0.4;
         }
 
-        /* --- CONTENT REVEAL (for scroll up) --- */
-        .slide.revealing .hero-content,
-        .slide.revealing .section-content {
-            animation: contentReveal 0.9s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+        h2.section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4.5vw, 3.5rem);
+            font-weight: 400;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 2rem;
         }
 
-        @keyframes contentReveal {
-            0% {
-                opacity: 0.3;
-                transform: translateY(25px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* --- HERO SLIDE --- */
-        .hero-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            width: 100%;
-            max-width: 1400px;
+        /* --- HERO --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
             align-items: center;
-            gap: 2rem;
+            padding: 8rem 0 6rem;
+            overflow: hidden;
             position: relative;
-            z-index: 3;
         }
 
-        .text-content {
+        .hero-inner {
             display: flex;
             flex-direction: column;
             gap: 2rem;
-            z-index: 4;
-            padding-left: 0;
-            margin-top: 2rem;
-            justify-self: start;
+            position: relative;
+            z-index: 3;
+            max-width: 750px;
         }
 
         .brand-title {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(3.5rem, 7vw, 6.5rem);
+            font-size: clamp(3.5rem, 9vw, 8rem);
             font-weight: 400;
             letter-spacing: -0.03em;
-            line-height: 1;
+            line-height: 0.95;
             position: relative;
             display: inline-block;
         }
@@ -211,18 +221,19 @@
             overflow: hidden;
             clip: rect(0, 900px, 0, 0);
             pointer-events: none;
+            opacity: 0.7;
         }
 
         .brand-title::before {
             left: 2px;
             text-shadow: -2px 0 #E60000;
-            animation: glitch-anim-1 3s infinite linear alternate-reverse;
+            animation: glitch-anim-1 4s infinite linear alternate-reverse;
         }
 
         .brand-title::after {
             left: -2px;
             text-shadow: 2px 0 #F5F5F5;
-            animation: glitch-anim-2 2.5s infinite linear alternate-reverse;
+            animation: glitch-anim-2 3.5s infinite linear alternate-reverse;
         }
 
         @keyframes glitch-anim-1 {
@@ -244,25 +255,25 @@
         }
 
         .subtitle {
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 300;
             color: #888;
-            max-width: 400px;
+            max-width: 460px;
             letter-spacing: 0.02em;
         }
 
         .links {
             display: flex;
             gap: 2rem;
-            margin-top: 1rem;
+            margin-top: 0.5rem;
         }
 
         .links a {
             text-decoration: none;
             color: #F5F5F5;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.15em;
             font-weight: 500;
             position: relative;
             padding-bottom: 4px;
@@ -275,31 +286,37 @@
             left: 0;
             width: 0;
             height: 1px;
-            background-color: #F5F5F5;
+            background-color: #E60000;
             transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        .links a:hover::after {
-            width: 100%;
-        }
+        .links a:hover { color: #E60000; }
+        .links a:hover::after { width: 100%; }
 
         /* --- DICE --- */
         .dice-wrapper {
             position: absolute;
-            top: -15%;
-            right: -10%;
-            width: 110vh;
-            height: 110vh;
-            z-index: 2;
+            top: 50%;
+            right: -18%;
+            width: 70vh;
+            height: 70vh;
+            z-index: 1;
             pointer-events: none;
-            transform: rotate(55deg);
-            opacity: 0.7;
-            transition: transform 0.5s ease, opacity 0.5s ease;
+            transform: translateY(-50%) rotate(55deg);
+            opacity: 0.55;
+            transition: transform 0.8s ease, opacity 0.8s ease;
+            animation: floatDice 9s ease-in-out infinite;
+        }
+
+        @keyframes floatDice {
+            0%, 100% { transform: translateY(-50%) rotate(55deg); }
+            50%      { transform: translateY(-54%) rotate(62deg); }
         }
 
         .dice-wrapper.konami {
-            transform: rotate(415deg);
+            transform: translateY(-50%) rotate(415deg);
             opacity: 1;
+            animation: none;
         }
 
         .dice-svg {
@@ -309,153 +326,380 @@
             transition: fill 0.5s ease;
         }
 
-        .dice-wrapper.konami .dice-svg {
-            fill: #E60000;
+        .dice-wrapper.konami .dice-svg { fill: #E60000; }
+
+        /* --- REVEAL ANIMATION --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.9s cubic-bezier(0.25, 1, 0.5, 1),
+                        transform 0.9s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        .dice-dot {
-            fill: #0A0A0A;
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        /* --- ASYMMETRIC POSITIONS --- */
-        .section-content {
-            max-width: 800px;
-            text-align: left;
-            z-index: 2;
-            position: relative;
-            width: 100%;
-            padding: 0 4rem;
-        }
-
-        .slide[data-index="1"] .section-content {
-            align-self: flex-end;
-            padding-bottom: 6rem;
-        }
-
-        .slide[data-index="2"] .section-content {
-            align-self: flex-start;
-            padding-top: 6rem;
-            text-align: right;
-            margin-left: auto;
-            padding-right: 6rem;
-        }
-
-        .slide[data-index="3"] .section-content {
-            align-self: center;
-            padding-left: 6rem;
-        }
-
-        /* --- CONTACT SLIDE --- */
-        .slide[data-index="4"] .section-content {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            max-width: 1400px;
-            padding: 0 4rem;
-            gap: 4rem;
-        }
-
-        .slide[data-index="4"] .section-content h2 {
-            order: 1;
-            text-align: left;
-            margin-bottom: 0;
-            flex-shrink: 0;
-        }
-
-        .slide[data-index="4"] .contact-details {
-            order: 2;
-            text-align: right;
-            margin-top: 0;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 2.5rem;
-        }
-
-        .section-content h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 5vw, 4rem);
-            margin-bottom: 1.5rem;
-            font-weight: 400;
-        }
-
-        .section-content p {
-            color: #888;
-            font-size: 1.1rem;
-            line-height: 1.8;
-        }
-
-        .section-content a {
-            color: #F5F5F5;
-            text-decoration: none;
-            border-bottom: 1px solid #333;
-            transition: border-color 0.3s ease, color 0.3s ease;
-        }
-
-        .section-content a:hover {
-            color: #E60000;
-            border-color: #E60000;
-        }
-
-        /* --- PROJECT LIST --- */
+        /* --- WORK / PROJECT LISTS --- */
         .project-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+            display: grid;
+            gap: 2.5rem;
             margin-top: 1rem;
         }
 
         .project-item {
             display: flex;
             flex-direction: column;
-            gap: 0.3rem;
+            gap: 0.6rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #1a1a1a;
+            transition: border-color 0.4s ease;
         }
 
+        .project-item:hover { border-color: #E60000; }
+
         .project-item .project-name {
+            font-size: 1.35rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+            color: #F5F5F5;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            width: fit-content;
+            transition: color 0.3s ease;
+        }
+
+        .project-item .project-name::after {
+            content: '↗';
+            font-size: 0.9rem;
+            color: #555;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), color 0.3s ease;
+        }
+
+        .project-item .project-name:hover { color: #E60000; }
+        .project-item .project-name:hover::after {
+            color: #E60000;
+            transform: translate(3px, -3px);
+        }
+
+        .project-item .project-desc {
+            font-size: 0.98rem;
+            color: #777;
+            line-height: 1.7;
+            max-width: 620px;
+        }
+
+        /* --- ABOUT / PROJECTS TEXT --- */
+        .prose {
+            color: #999;
             font-size: 1.1rem;
-            font-weight: 500;
+            line-height: 1.9;
+            max-width: 640px;
+        }
+
+        .prose + .prose { margin-top: 1.5rem; }
+
+        .prose a {
             color: #F5F5F5;
             text-decoration: none;
             border-bottom: 1px solid #333;
             transition: border-color 0.3s ease, color 0.3s ease;
-            display: inline-block;
-            width: fit-content;
         }
 
-        .project-item .project-name:hover {
+        .prose a:hover {
             color: #E60000;
             border-color: #E60000;
         }
 
-        .project-item .project-desc {
-            font-size: 0.9rem;
-            color: #666;
-            line-height: 1.5;
-        }
-
-        /* --- CONTACT DETAILS --- */
-        .contact-details {
+        /* --- GUEDES / GUIDES --- */
+        .guide-list {
             display: flex;
             flex-direction: column;
-            gap: 2.5rem;
+            border-top: 1px solid #1a1a1a;
+            margin-top: 1rem;
+        }
+
+        .guide {
+            border-bottom: 1px solid #1a1a1a;
+            transition: border-color 0.4s ease;
+        }
+
+        .guide.open { border-color: #E60000; }
+
+        .guide-header {
+            width: 100%;
+            background: none;
+            border: none;
+            color: inherit;
+            font-family: inherit;
+            text-align: left;
+            padding: 2rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 1.6rem;
+            transition: padding 0.4s ease;
+        }
+
+        .guide-num {
+            font-size: 0.72rem;
+            letter-spacing: 0.2em;
+            color: #555;
+            font-weight: 500;
+            padding-top: 0.55rem;
+            min-width: 26px;
+            transition: color 0.3s ease;
+        }
+
+        .guide.open .guide-num { color: #E60000; }
+
+        .guide-title-wrap {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .guide-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+            font-weight: 400;
+            line-height: 1.3;
+            color: #F5F5F5;
+            transition: color 0.3s ease;
+        }
+
+        .guide-header:hover .guide-title { color: #E60000; }
+
+        .guide-desc {
+            font-size: 0.92rem;
+            color: #666;
+            line-height: 1.6;
+            max-width: 620px;
+        }
+
+        .guide-toggle {
+            position: relative;
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            margin-top: 0.45rem;
+        }
+
+        .guide-toggle::before,
+        .guide-toggle::after {
+            content: '';
+            position: absolute;
+            background: #F5F5F5;
+            transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1),
+                        background 0.3s ease;
+        }
+
+        .guide-toggle::before {
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            transform: translateY(-50%);
+        }
+
+        .guide-toggle::after {
+            left: 50%;
+            top: 0;
+            width: 1px;
+            height: 100%;
+            transform: translateX(-50%);
+        }
+
+        .guide.open .guide-toggle::before,
+        .guide.open .guide-toggle::after { background: #E60000; }
+
+        .guide.open .guide-toggle::after { transform: translateX(-50%) rotate(90deg); }
+        .guide.open .guide-toggle::before { transform: translateY(-50%) rotate(180deg); }
+
+        .guide-body {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .guide.open .guide-body { grid-template-rows: 1fr; }
+
+        .guide-body-inner {
+            overflow: hidden;
+        }
+
+        .guide-content {
+            padding: 0 0 3rem 42px;
+            max-width: 780px;
+        }
+
+        /* --- MARKDOWN STYLES --- */
+        .guide-content h1,
+        .guide-content h2,
+        .guide-content h3,
+        .guide-content h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+            color: #F5F5F5;
+            line-height: 1.25;
+            margin: 2.2rem 0 1rem;
+            letter-spacing: -0.01em;
+        }
+
+        .guide-content h1 { font-size: 1.9rem; margin-top: 0.5rem; }
+        .guide-content h2 { font-size: 1.5rem; }
+        .guide-content h3 { font-size: 1.2rem; }
+        .guide-content h4 { font-size: 1rem; color: #ccc; }
+
+        .guide-content h2::before {
+            content: '';
+            display: block;
+            width: 32px;
+            height: 1px;
+            background: #E60000;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        .guide-content p {
+            color: #999;
+            font-size: 1rem;
+            line-height: 1.85;
+            margin-bottom: 1.2rem;
+        }
+
+        .guide-content strong { color: #F5F5F5; font-weight: 500; }
+        .guide-content em { color: #bbb; font-style: italic; }
+
+        .guide-content ul,
+        .guide-content ol {
+            margin: 0 0 1.4rem 1.3rem;
+            color: #999;
+            font-size: 1rem;
+            line-height: 1.85;
+        }
+
+        .guide-content li { margin-bottom: 0.5rem; padding-left: 0.3rem; }
+        .guide-content li::marker { color: #E60000; }
+
+        .guide-content a {
+            color: #E60000;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(230, 0, 0, 0.35);
+            transition: border-color 0.3s ease;
+        }
+
+        .guide-content a:hover { border-color: #E60000; }
+
+        .guide-content code {
+            background: #161616;
+            border: 1px solid #222;
+            padding: 0.15em 0.45em;
+            border-radius: 4px;
+            font-family: 'SFMono-Regular', Consolas, monospace;
+            font-size: 0.86em;
+            color: #e8b3b3;
+        }
+
+        .guide-content pre {
+            background: #101010;
+            border: 1px solid #1e1e1e;
+            border-radius: 10px;
+            padding: 1.3rem 1.4rem;
+            overflow-x: auto;
+            margin: 0 0 1.5rem;
+            line-height: 1.6;
+        }
+
+        .guide-content pre code {
+            background: none;
+            border: none;
+            padding: 0;
+            color: #d4d4d4;
+            font-size: 0.86rem;
+        }
+
+        .guide-content blockquote {
+            border-left: 2px solid #E60000;
+            padding: 0.2rem 0 0.2rem 1.2rem;
+            margin: 0 0 1.4rem;
+            color: #888;
+            font-style: italic;
+        }
+
+        .guide-content blockquote p { margin-bottom: 0; color: #888; }
+
+        .guide-content hr {
+            border: none;
+            border-top: 1px solid #1e1e1e;
+            margin: 2.2rem 0;
+        }
+
+        .guide-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+            font-size: 0.92rem;
+        }
+
+        .guide-content th,
+        .guide-content td {
+            text-align: left;
+            padding: 0.7rem 0.9rem;
+            border-bottom: 1px solid #1e1e1e;
+            color: #999;
+        }
+
+        .guide-content th {
+            color: #F5F5F5;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+        }
+
+        .guide-content img {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid #1e1e1e;
+            margin: 0.5rem 0 1.5rem;
+        }
+
+        .md-loading,
+        .md-error {
+            font-size: 0.95rem;
+            color: #777;
+        }
+
+        .md-error {
+            border-left: 2px solid #E60000;
+            padding-left: 1rem;
+            color: #999;
+            line-height: 1.8;
+        }
+
+        /* --- CONTACT --- */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 3rem 2rem;
+            margin-top: 1rem;
         }
 
         .contact-group {
             display: flex;
             flex-direction: column;
-            gap: 0.6rem;
-            align-items: flex-end;
+            gap: 0.7rem;
         }
 
         .contact-group .label {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             text-transform: uppercase;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.22em;
             color: #555;
-            margin-bottom: 0.3rem;
             font-weight: 500;
         }
 
@@ -463,9 +707,8 @@
         .contact-group span {
             color: #F5F5F5;
             text-decoration: none;
-            font-size: 1.05rem;
+            font-size: 1rem;
             transition: color 0.3s ease;
-            display: inline-block;
             width: fit-content;
         }
 
@@ -479,143 +722,96 @@
             border-color: #E60000;
         }
 
-        .contact-group span {
-            color: #888;
+        .contact-group span { color: #888; }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 3rem 0 3rem;
+            border-top: 1px solid #141414;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #444;
         }
 
-        /* --- LAPTOP OPTIMIZATION --- */
-        @media (max-width: 1440px) {
-            .brand-title {
-                font-size: clamp(3rem, 6vw, 5.5rem);
-            }
-            
+        footer a {
+            color: #444;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover { color: #E60000; }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 1100px) {
             .dice-wrapper {
-                width: 95vh;
-                height: 95vh;
-                top: -10%;
-                right: -8%;
-                opacity: 0.65;
+                right: -35%;
+                width: 60vh;
+                height: 60vh;
+                opacity: 0.35;
             }
         }
 
-        /* --- TABLET & MOBILE --- */
         @media (max-width: 900px) {
-            .hero-content {
-                grid-template-columns: 1fr;
-                text-align: center;
-                gap: 3rem;
-                padding-top: 6rem;
-            }
-
             nav {
-                top: 1.5rem;
-                right: 1.5rem;
-                gap: 1.5rem;
-                font-size: 0.7rem;
+                padding: 1.2rem 1.5rem;
+                gap: 1rem;
             }
 
-            .slide-number {
-                bottom: 1.5rem;
-                right: 1.5rem;
-                font-size: 0.65rem;
+            .nav-links {
+                gap: 1.4rem;
+                font-size: 0.68rem;
             }
 
-            .text-content {
-                align-items: center;
-                justify-self: center;
-                margin-top: 0;
-            }
+            .container { padding: 0 1.5rem; }
 
-            .subtitle {
-                text-align: center;
-            }
+            section { padding: 6rem 0; }
 
-            .links {
-                justify-content: center;
-            }
+            .hero { padding: 7rem 0 4rem; }
 
             .dice-wrapper {
-                top: -20%;
-                right: -30%;
-                width: 90vw;
-                height: 90vw;
-                opacity: 0.4;
+                top: 12%;
+                right: -45%;
+                width: 75vw;
+                height: 75vw;
+                transform: rotate(55deg);
+                opacity: 0.28;
+                animation: none;
             }
 
-            .section-content {
-                text-align: center;
-                padding: 0 1.5rem;
-                align-self: center !important;
-                padding-top: 0 !important;
-                padding-bottom: 0 !important;
-                padding-left: 0 !important;
-                padding-right: 0 !important;
-                margin-left: 0 !important;
-            }
+            .guide-content { padding-left: 0; }
 
-            .slide[data-index="1"] .section-content,
-            .slide[data-index="2"] .section-content,
-            .slide[data-index="3"] .section-content {
-                text-align: center;
-                padding: 0 1.5rem;
-            }
+            .guide-header { gap: 1rem; padding: 1.6rem 0; }
 
-            .slide[data-index="4"] .section-content {
-                flex-direction: column;
-                text-align: center;
-                gap: 2.5rem;
-                padding: 0 1.5rem;
-            }
-
-            .slide[data-index="4"] .section-content h2 {
-                order: 0;
-                text-align: center;
-            }
-
-            .slide[data-index="4"] .contact-details {
-                text-align: center;
-                align-items: center;
-                gap: 2rem;
-            }
-
-            .contact-details {
-                align-items: center;
-            }
-
-            .contact-group {
-                align-items: center;
-            }
-
-            .project-item .project-name {
-                margin: 0 auto;
-            }
+            footer { justify-content: center; text-align: center; }
         }
 
-        @media (max-width: 480px) {
-            nav {
-                gap: 1rem;
-                font-size: 0.6rem;
-            }
-            
-            .brand-title {
-                font-size: 3rem;
-            }
-            
-            .slide {
-                padding: 4rem 1.5rem;
-            }
+        @media (max-width: 560px) {
+            .nav-links { gap: 1rem; font-size: 0.62rem; }
+            .brand-title { font-size: clamp(2.8rem, 16vw, 4rem); }
+            .guide-num { display: none; }
         }
 
         /* --- REDUCED MOTION --- */
         @media (prefers-reduced-motion: reduce) {
-            .slide,
+            html { scroll-behavior: auto; }
             .cursor,
             .dice-wrapper,
-            .slide.revealing .hero-content,
-            .slide.revealing .section-content {
+            .reveal,
+            .guide-body,
+            .guide-toggle::before,
+            .guide-toggle::after,
+            .brand-title::before,
+            .brand-title::after {
                 transition: none !important;
                 animation: none !important;
             }
+            .reveal { opacity: 1; transform: none; }
         }
     </style>
 </head>
@@ -624,329 +820,263 @@
     <div class="cursor"></div>
 
     <nav>
-        <a href="#" data-target="0" class="active">Home</a>
-        <a href="#" data-target="1">Work</a>
-        <a href="#" data-target="2">Projects</a>
-        <a href="#" data-target="3">About</a>
-        <a href="#" data-target="4">Contact</a>
+        <a href="#home" class="nav-brand">STAATS<span>RAT</span></a>
+        <div class="nav-links">
+            <a href="#home" data-target="home" class="active">Home</a>
+            <a href="#work" data-target="work">Work</a>
+            <a href="#projects" data-target="projects">Projects</a>
+            <a href="#about" data-target="about">About</a>
+            <a href="#guedes" data-target="guedes">Guedes</a>
+            <a href="#contact" data-target="contact">Contact</a>
+        </div>
     </nav>
 
-    <div class="slide-container" id="slideContainer">
-
-        <!-- SLIDE 0: HERO -->
-        <div class="slide active" data-index="0">
-            <div class="dice-wrapper" id="diceWrapper">
-                <svg class="dice-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="20" y="20" width="160" height="160" rx="20" fill="#7A0000" />
-                    <circle cx="65" cy="60" r="14" fill="#0A0A0A" />
-                    <circle cx="135" cy="60" r="14" fill="#0A0A0A" />
-                    <circle cx="65" cy="100" r="14" fill="#0A0A0A" />
-                    <circle cx="135" cy="100" r="14" fill="#0A0A0A" />
-                    <circle cx="65" cy="140" r="14" fill="#0A0A0A" />
-                    <circle cx="135" cy="140" r="14" fill="#0A0A0A" />
-                    <rect x="20" y="20" width="160" height="160" rx="20" fill="url(#gradient)" opacity="0.2" />
-                    <defs>
-                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.2" />
-                            <stop offset="100%" style="stop-color:#000000;stop-opacity:0.4" />
-                        </linearGradient>
-                    </defs>
-                </svg>
-            </div>
-
-            <div class="hero-content">
-                <div class="text-content">
-                    <h1 class="brand-title" data-text="STAATSRAT">STAATSRAT</h1>
-                    <p class="subtitle">
-                        Security research. Open source contributions.
-                    </p>
-                    <div class="links">
-                        <a href="https://github.com/Staatsrat" target="_blank">GitHub</a>
-                        <a href="https://x.com/staatsratx" target="_blank">X</a>
-                    </div>
-                </div>
-            </div>
+    <!-- HERO -->
+    <section class="hero" id="home">
+        <div class="dice-wrapper" id="diceWrapper">
+            <svg class="dice-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <rect x="20" y="20" width="160" height="160" rx="20" fill="#7A0000" />
+                <circle cx="65" cy="60" r="14" fill="#0A0A0A" />
+                <circle cx="135" cy="60" r="14" fill="#0A0A0A" />
+                <circle cx="65" cy="100" r="14" fill="#0A0A0A" />
+                <circle cx="135" cy="100" r="14" fill="#0A0A0A" />
+                <circle cx="65" cy="140" r="14" fill="#0A0A0A" />
+                <circle cx="135" cy="140" r="14" fill="#0A0A0A" />
+                <rect x="20" y="20" width="160" height="160" rx="20" fill="url(#gradient)" opacity="0.2" />
+                <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.2" />
+                        <stop offset="100%" style="stop-color:#000000;stop-opacity:0.4" />
+                    </linearGradient>
+                </defs>
+            </svg>
         </div>
 
-        <!-- SLIDE 1: WORK -->
-        <div class="slide" data-index="1">
-            <div class="section-content">
-                <h2>Selected Work</h2>
-                <div class="project-list">
-                    <div class="project-item">
-                        <a href="https://github.com/Staatsrat/icmp_c2" target="_blank" class="project-name">icmp_c2</a>
-                        <span class="project-desc">Covert C2 channel over ICMP packet sizes. Commands are encoded in the echo request length — no payload needed.</span>
-                    </div>
-                    <div class="project-item">
-                        <a href="https://github.com/Staatsrat/tor_keep" target="_blank" class="project-name">tor_keep</a>
-                        <span class="project-desc">Tor connection monitoring and keep-alive utility. Ensures persistent Tor connectivity and network resilience.</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- SLIDE 2: PROJECTS -->
-        <div class="slide" data-index="2">
-            <div class="section-content">
-                <h2>Projects</h2>
-                <p>
-                    Active learning journey toward the eLearnSecurity Junior Penetration Tester certification. Currently implementing encryption mechanisms for icmp_c2 to enhance command obfuscation and developing additional security research tools.
+        <div class="container">
+            <div class="hero-inner">
+                <h1 class="brand-title" data-text="STAATSRAT">STAATSRAT</h1>
+                <p class="subtitle">
+                    Security research. Open source contributions.
                 </p>
-            </div>
-        </div>
-
-        <!-- SLIDE 3: ABOUT -->
-        <div class="slide" data-index="3">
-            <div class="section-content">
-                <h2>About</h2>
-                <p>
-                    Love testing things, ways they break, how they broke, 
-                    and how to do it again with less effort.
-                </p>
-            </div>
-        </div>
-
-        <!-- SLIDE 4: CONTACT -->
-        <div class="slide" data-index="4">
-            <div class="section-content">
-                <h2>Contact</h2>
-                <div class="contact-details">
-                    <div class="contact-group">
-                        <span class="label">Email</span>
-                        <span>mail@staatsrat.me</span>
-                    </div>
-                    <div class="contact-group">
-                        <span class="label">Web</span>
-                        <a href="https://staatsrat.me" target="_blank">staatsrat.me</a>
-                    </div>
-                    <div class="contact-group">
-                        <span class="label">Social</span>
-                        <a href="https://x.com/staatsratx" target="_blank">x.com/staatsratx</a>
-                        <a href="https://www.reddit.com/user/staatsrat/" target="_blank">reddit.com/user/staatsrat</a>
-                        <a href="https://www.youtube.com/@staatsrat" target="_blank">youtube.com/@staatsrat</a>
-                    </div>
+                <div class="links">
+                    <a href="https://github.com/Staatsrat" target="_blank" rel="noopener">GitHub</a>
+                    <a href="https://x.com/staatsratx" target="_blank" rel="noopener">X</a>
                 </div>
             </div>
         </div>
+    </section>
 
-    </div>
+    <!-- WORK -->
+    <section id="work">
+        <div class="container">
+            <div class="section-label reveal">01 — Selected Work</div>
+            <h2 class="section-title reveal">Things I've built</h2>
+            <div class="project-list">
+                <div class="project-item reveal">
+                    <a href="https://github.com/Staatsrat/icmp_communication" target="_blank" rel="noopener" class="project-name">icmp_communication</a>
+                    <span class="project-desc">Covert C2 channel over ICMP packet sizes. Commands are encoded in the echo request length — no payload needed.</span>
+                </div>
+                <div class="project-item reveal">
+                    <a href="https://github.com/Staatsrat/tor_keep" target="_blank" rel="noopener" class="project-name">tor_keep</a>
+                    <span class="project-desc">Tor connection monitoring and keep-alive utility. Ensures persistent Tor connectivity and network resilience.</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <div class="slide-number">
-        <span class="current" id="currentSlide">01</span> / <span id="totalSlides">05</span>
-    </div>
+    <!-- PROJECTS -->
+    <section id="projects">
+        <div class="container">
+            <div class="section-label reveal">02 — Projects</div>
+            <h2 class="section-title reveal">Currently in progress</h2>
+            <p class="prose reveal">
+                Active learning journey toward the eLearnSecurity Junior Penetration Tester certification.
+                Currently implementing encryption mechanisms for <strong>icmp_communication</strong> to enhance
+                command obfuscation and developing additional security research tools.
+            </p>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+        <div class="container">
+            <div class="section-label reveal">03 — About</div>
+            <h2 class="section-title reveal">Who's behind this</h2>
+            <p class="prose reveal">
+                Love testing things, ways they break, how they broke,
+                and how to do it again with less effort.
+            </p>
+        </div>
+    </section>
+
+    <!-- GUEDES -->
+    <section id="guedes">
+        <div class="container">
+            <div class="section-label reveal">04 — Guedes</div>
+            <h2 class="section-title reveal">Notes &amp; guides</h2>
+            <p class="prose reveal" style="margin-bottom: 2.5rem;">
+                Write-ups and practical guides — click an entry to expand it.
+            </p>
+
+            <div class="guide-list reveal">
+
+                <div class="guide" data-md="Environment.md">
+                    <button class="guide-header" type="button" aria-expanded="false">
+                        <span class="guide-num">01</span>
+                        <span class="guide-title-wrap">
+                            <span class="guide-title">How to create a secure environment to open malicious files</span>
+                            <span class="guide-desc">A practical walkthrough for setting up an isolated VM to safely detonate suspicious files.</span>
+                        </span>
+                        <span class="guide-toggle" aria-hidden="true"></span>
+                    </button>
+                    <div class="guide-body">
+                        <div class="guide-body-inner">
+                            <div class="guide-content"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+        <div class="container">
+            <div class="section-label reveal">05 — Contact</div>
+            <h2 class="section-title reveal">Get in touch</h2>
+            <div class="contact-grid reveal">
+                <div class="contact-group">
+                    <span class="label">Email</span>
+                    <span>mail@staatsrat.me</span>
+                </div>
+                <div class="contact-group">
+                    <span class="label">Web</span>
+                    <a href="https://staatsrat.me" target="_blank" rel="noopener">staatsrat.me</a>
+                </div>
+                <div class="contact-group">
+                    <span class="label">Social</span>
+                    <a href="https://x.com/staatsratx" target="_blank" rel="noopener">x.com/staatsratx</a>
+                    <a href="https://www.reddit.com/user/staatsrat/" target="_blank" rel="noopener">reddit.com/user/staatsrat</a>
+                    <a href="https://www.youtube.com/@staatsrat" target="_blank" rel="noopener">youtube.com/@staatsrat</a>
+                </div>
+            </div>
+
+            <footer>
+                <span>© <span id="year"></span> STAATSRAT</span>
+                <a href="#home">Back to top ↑</a>
+            </footer>
+        </div>
+    </section>
+
+    <!-- Markdown parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const cursor = document.querySelector('.cursor');
-            const links = document.querySelectorAll('a');
-            const slides = document.querySelectorAll('.slide');
-            const currentSlideEl = document.getElementById('currentSlide');
-            const totalSlidesEl = document.getElementById('totalSlides');
             const diceWrapper = document.getElementById('diceWrapper');
-            const navLinks = document.querySelectorAll('nav a');
-            
-            let currentSlide = 0;
-            const totalSlides = slides.length;
-            let isAnimating = false;
+            const guideEls = document.querySelectorAll('.guide');
+            const navLinks = document.querySelectorAll('.nav-links a');
+            const sections = document.querySelectorAll('section[id]');
 
-            totalSlidesEl.textContent = String(totalSlides).padStart(2, '0');
+            document.getElementById('year').textContent = new Date().getFullYear();
 
-            // === Z-INDEX HELPER ===
-            function updateZIndexes(activeIndex) {
-                slides.forEach((slide, i) => {
-                    if (i === activeIndex) {
-                        slide.style.zIndex = 100;
-                    } else if (i < activeIndex) {
-                        slide.style.zIndex = 100 - (activeIndex - i);
-                    } else {
-                        slide.style.zIndex = 50 - (i - activeIndex);
-                    }
-                });
-            }
-
-            // Initial setup
-            updateZIndexes(0);
-
-            // 1. Custom Cursor
+            /* ---------- 1. CUSTOM CURSOR ---------- */
             document.addEventListener('mousemove', (e) => {
                 cursor.style.left = e.clientX + 'px';
                 cursor.style.top = e.clientY + 'px';
             });
 
-            // 2. Hover effect
-            links.forEach(link => {
-                link.addEventListener('mouseenter', () => {
-                    cursor.classList.add('hover-active');
-                });
-                link.addEventListener('mouseleave', () => {
-                    cursor.classList.remove('hover-active');
-                });
+            document.querySelectorAll('a, button').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hover-active'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hover-active'));
             });
 
-            // 3. Slide function
-            function goToSlide(index) {
-                if (isAnimating) return;
-                
-                if (index < 0) index = 0;
-                if (index >= totalSlides) index = totalSlides - 1;
-                if (index === currentSlide) return;
-
-                isAnimating = true;
-
-                const oldSlide = slides[currentSlide];
-                const newSlide = slides[index];
-
-                if (index > currentSlide) {
-                    // === SCROLL DOWN ===
-                    // Hide all slides between current and target (they should be at 100%)
-                    for (let i = currentSlide + 1; i < index; i++) {
-                        slides[i].style.transition = 'none';
-                        slides[i].style.transform = 'translateY(100%)';
-                    }
-                    
-                    // Target slide must start from below
-                    newSlide.style.transition = 'none';
-                    newSlide.style.transform = 'translateY(100%)';
-                    
-                    // Force reflow
-                    void slides[0].offsetHeight;
-                    
-                    // Re-enable transitions
-                    for (let i = currentSlide + 1; i < index; i++) {
-                        slides[i].style.transition = '';
-                    }
-                    newSlide.style.transition = '';
-                    
-                    // Animate target up
-                    newSlide.style.zIndex = 9000;
-                    newSlide.style.transform = 'translateY(0)';
-                } else {
-                    // === SCROLL UP ===
-                    // Target slide must be visible underneath (translateY(0))
-                    newSlide.style.transition = 'none';
-                    newSlide.style.transform = 'translateY(0)';
-                    
-                    // Hide all slides between target and current (they're behind, not visible)
-                    for (let i = index + 1; i < currentSlide; i++) {
-                        slides[i].style.transition = 'none';
-                        slides[i].style.transform = 'translateY(100%)';
-                    }
-                    
-                    // Force reflow
-                    void slides[0].offsetHeight;
-                    
-                    // Re-enable transitions
-                    newSlide.style.transition = '';
-                    for (let i = index + 1; i < currentSlide; i++) {
-                        slides[i].style.transition = '';
-                    }
-                    
-                    // Old slide slides down
-                    oldSlide.style.zIndex = 9000;
-                    void oldSlide.offsetHeight;
-                    oldSlide.style.transform = 'translateY(100%)';
-                    
-                    // Content reveal animation on the newly-revealed slide
-                    newSlide.classList.add('revealing');
-                    setTimeout(() => {
-                        newSlide.classList.remove('revealing');
-                    }, 950);
-                }
-
-                navLinks.forEach((link, i) => {
-                    link.classList.toggle('active', i === index);
-                });
-
-                currentSlideEl.textContent = String(index + 1).padStart(2, '0');
-                currentSlide = index;
-
-                // After animation + buffer, reset z-indexes
-                setTimeout(() => {
-                    updateZIndexes(index);
-                    isAnimating = false;
-                }, 1100);
-            }
-
-            // 4. Scroll event
-            let scrollAccumulator = 0;
-            const SCROLL_THRESHOLD = 80;
-
-            window.addEventListener('wheel', (e) => {
-                e.preventDefault();
-                if (isAnimating) return;
-
-                scrollAccumulator += e.deltaY;
-
-                if (Math.abs(scrollAccumulator) >= SCROLL_THRESHOLD) {
-                    if (scrollAccumulator > 0) {
-                        goToSlide(currentSlide + 1);
-                    } else {
-                        goToSlide(currentSlide - 1);
-                    }
-                    scrollAccumulator = 0;
-                }
-            }, { passive: false });
-
-            // 5. Navigation click
-            navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    if (isAnimating) return;
-                    const targetIndex = parseInt(link.getAttribute('data-target'));
-                    if (!isNaN(targetIndex)) {
-                        goToSlide(targetIndex);
+            /* ---------- 2. SCROLL REVEAL ---------- */
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        revealObserver.unobserve(entry.target);
                     }
                 });
-            });
+            }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
 
-            // 6. Glitch effect
-            const title = document.querySelector('.brand-title');
-            title.addEventListener('mouseenter', () => {
-                title.style.animation = 'glitch-anim-1 0.2s infinite linear alternate-reverse';
-            });
-            title.addEventListener('mouseleave', () => {
-                title.style.animation = '';
-            });
+            document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-            // 7. Touch support
-            let touchStartY = 0;
-            let touchEndY = 0;
-
-            window.addEventListener('touchstart', (e) => {
-                touchStartY = e.changedTouches[0].screenY;
-            }, { passive: true });
-
-            window.addEventListener('touchend', (e) => {
-                touchEndY = e.changedTouches[0].screenY;
-                handleSwipe();
-            }, { passive: true });
-
-            function handleSwipe() {
-                if (isAnimating) return;
-                const swipeDistance = touchStartY - touchEndY;
-                const threshold = 50;
-
-                if (Math.abs(swipeDistance) > threshold) {
-                    if (swipeDistance > 0) {
-                        goToSlide(currentSlide + 1);
-                    } else {
-                        goToSlide(currentSlide - 1);
+            /* ---------- 3. NAV ACTIVE STATE ---------- */
+            const navObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.id;
+                        navLinks.forEach(link => {
+                            link.classList.toggle('active', link.dataset.target === id);
+                        });
                     }
+                });
+            }, { threshold: 0.25, rootMargin: '-30% 0px -55% 0px' });
+
+            sections.forEach(sec => navObserver.observe(sec));
+
+            /* ---------- 4. GUIDE ACCORDION + MARKDOWN ---------- */
+            async function loadGuide(guide) {
+                if (guide.dataset.loaded === 'true') return;
+
+                const content = guide.querySelector('.guide-content');
+                const file = guide.dataset.md;
+                content.innerHTML = '<p class="md-loading">Loading…</p>';
+
+                try {
+                    const res = await fetch(file, { cache: 'no-cache' });
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+
+                    const text = await res.text();
+                    const html = (window.marked && typeof marked.parse === 'function')
+                        ? marked.parse(text)
+                        : '<pre>' + text.replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])) + '</pre>';
+
+                    content.innerHTML = html;
+                    guide.dataset.loaded = 'true';
+                } catch (err) {
+                    content.innerHTML =
+                        '<p class="md-error">Could not load <code>' + file + '</code>.<br><br>' +
+                        'Make sure the file exists next to <code>index.html</code> and that the site is served over HTTP ' +
+                        '(e.g. <code>python3 -m http.server</code>) — browsers block <code>fetch()</code> on <code>file://</code>.</p>';
                 }
             }
 
-            // 8. Konami Code
-            const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+            guideEls.forEach(guide => {
+                const header = guide.querySelector('.guide-header');
+
+                header.addEventListener('click', () => {
+                    const isOpen = guide.classList.contains('open');
+
+                    // Close all others
+                    guideEls.forEach(g => {
+                        g.classList.remove('open');
+                        g.querySelector('.guide-header').setAttribute('aria-expanded', 'false');
+                    });
+
+                    if (!isOpen) {
+                        guide.classList.add('open');
+                        header.setAttribute('aria-expanded', 'true');
+                        loadGuide(guide);
+                    }
+                });
+            });
+
+            /* ---------- 5. KONAMI CODE ---------- */
+            const konamiCode = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
             let konamiIndex = 0;
 
             window.addEventListener('keydown', (e) => {
-                if (e.key === konamiCode[konamiIndex] || e.key.toLowerCase() === konamiCode[konamiIndex]) {
+                const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+                if (key === konamiCode[konamiIndex]) {
                     konamiIndex++;
                     if (konamiIndex === konamiCode.length) {
                         diceWrapper.classList.add('konami');
-                        setTimeout(() => {
-                            diceWrapper.classList.remove('konami');
-                        }, 2000);
+                        setTimeout(() => diceWrapper.classList.remove('konami'), 2200);
                         konamiIndex = 0;
                     }
                 } else {
