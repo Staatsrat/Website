@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
+        /* --- RESET & BASE --- */
         * {
             margin: 0;
             padding: 0;
@@ -16,7 +17,6 @@
 
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: 7rem;
         }
 
         body {
@@ -38,11 +38,8 @@
             color: #F5F5F5;
         }
 
-        /* --- SCROLLBAR --- */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0A0A0A; }
-        ::-webkit-scrollbar-thumb { background: #222; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #E60000; }
+        ::-webkit-scrollbar { width: 0; }
+        body { scrollbar-width: none; }
 
         /* --- CUSTOM CURSOR --- */
         .cursor {
@@ -71,122 +68,81 @@
         /* --- NAVIGATION --- */
         nav {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 2.5rem;
+            right: 3rem;
             z-index: 1000;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 2rem;
-            padding: 1.6rem 3rem;
-            background: rgba(10, 10, 10, 0.55);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .nav-brand {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.05rem;
-            letter-spacing: 0.02em;
-            color: #F5F5F5;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .nav-brand span { color: #E60000; }
-
-        .nav-links {
-            display: flex;
             gap: 2.5rem;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             text-transform: uppercase;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.18em;
             font-weight: 500;
-            overflow-x: auto;
-            scrollbar-width: none;
         }
 
-        .nav-links::-webkit-scrollbar { display: none; }
-
-        .nav-links a {
+        nav a {
             text-decoration: none;
             color: #F5F5F5;
             position: relative;
             padding-bottom: 4px;
-            white-space: nowrap;
-            transition: color 0.3s ease;
+            transition: color 0.4s ease;
+            opacity: 0.4;
         }
 
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background-color: #E60000;
-            transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        nav a:hover,
+        nav a.active {
+            color: #E60000;
+            opacity: 1;
         }
 
-        .nav-links a:hover { color: #E60000; }
-        .nav-links a:hover::after { width: 100%; }
+        /* --- SECTIONS --- */
+        section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 6rem 3rem;
+            position: relative;
+        }
 
-        .nav-links a.active { color: #E60000; }
-        .nav-links a.active::after { width: 100%; }
-
-        /* --- LAYOUT --- */
         .container {
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 3rem;
         }
 
-        section {
-            padding: 9rem 0;
-            position: relative;
-        }
-
-        .section-label {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.25em;
-            color: #E60000;
-            font-weight: 500;
-            margin-bottom: 2rem;
-        }
-
-        .section-label::after {
-            content: '';
-            height: 1px;
-            width: 60px;
-            background: #E60000;
-            opacity: 0.4;
-        }
-
+        /* --- TYPOGRAPHY --- */
         h2.section-title {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 4.5vw, 3.5rem);
+            font-size: clamp(2.5rem, 6vw, 5rem);
             font-weight: 400;
-            line-height: 1.1;
+            line-height: 1.05;
             letter-spacing: -0.02em;
-            margin-bottom: 2rem;
+        }
+
+        .prose {
+            color: #888;
+            font-size: 1.05rem;
+            line-height: 1.9;
+            max-width: 560px;
+            margin-top: 2.5rem;
+        }
+
+        .prose + .prose { margin-top: 1.2rem; }
+
+        /* --- REVEAL --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1),
+                        transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* --- HERO --- */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 8rem 0 6rem;
-            overflow: hidden;
-            position: relative;
-        }
+        .hero { padding: 0; }
 
         .hero-inner {
             display: flex;
@@ -194,7 +150,8 @@
             gap: 2rem;
             position: relative;
             z-index: 3;
-            max-width: 750px;
+            max-width: 700px;
+            padding-left: 3rem;
         }
 
         .brand-title {
@@ -207,7 +164,6 @@
             display: inline-block;
         }
 
-        /* --- GLITCH EFFECT --- */
         .brand-title::before,
         .brand-title::after {
             content: attr(data-text);
@@ -256,8 +212,8 @@
         .subtitle {
             font-size: 1.05rem;
             font-weight: 300;
-            color: #888;
-            max-width: 460px;
+            color: #777;
+            max-width: 440px;
             letter-spacing: 0.02em;
         }
 
@@ -270,46 +226,37 @@
         .links a {
             text-decoration: none;
             color: #F5F5F5;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             text-transform: uppercase;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.18em;
             font-weight: 500;
-            position: relative;
-            padding-bottom: 4px;
+            opacity: 0.6;
+            transition: opacity 0.4s ease, color 0.4s ease;
         }
 
-        .links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background-color: #E60000;
-            transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        .links a:hover {
+            color: #E60000;
+            opacity: 1;
         }
 
-        .links a:hover { color: #E60000; }
-        .links a:hover::after { width: 100%; }
-
-        /* --- DICE --- */
+        /* --- DICE (big, like the original) --- */
         .dice-wrapper {
             position: absolute;
             top: 50%;
-            right: -18%;
-            width: 70vh;
-            height: 70vh;
+            right: -10%;
+            width: 110vh;
+            height: 110vh;
             z-index: 1;
             pointer-events: none;
             transform: translateY(-50%) rotate(55deg);
-            opacity: 0.55;
-            transition: transform 0.8s ease, opacity 0.8s ease;
-            animation: floatDice 9s ease-in-out infinite;
+            opacity: 0.5;
+            transition: transform 1s ease, opacity 1s ease;
+            animation: floatDice 12s ease-in-out infinite;
         }
 
         @keyframes floatDice {
             0%, 100% { transform: translateY(-50%) rotate(55deg); }
-            50%      { transform: translateY(-54%) rotate(62deg); }
+            50%      { transform: translateY(-52%) rotate(63deg); }
         }
 
         .dice-wrapper.konami {
@@ -322,45 +269,28 @@
             width: 100%;
             height: 100%;
             fill: #7A0000;
-            transition: fill 0.5s ease;
+            transition: fill 0.6s ease;
         }
 
         .dice-wrapper.konami .dice-svg { fill: #E60000; }
 
-        /* --- REVEAL ANIMATION --- */
-        .reveal {
-            opacity: 0;
-            transform: translateY(28px);
-            transition: opacity 0.9s cubic-bezier(0.25, 1, 0.5, 1),
-                        transform 0.9s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* --- WORK / PROJECT LISTS --- */
+        /* --- WORK LIST --- */
         .project-list {
-            display: grid;
-            gap: 2.5rem;
-            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 3.5rem;
+            margin-top: 3rem;
         }
 
         .project-item {
             display: flex;
             flex-direction: column;
             gap: 0.6rem;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid #1a1a1a;
-            transition: border-color 0.4s ease;
         }
 
-        .project-item:hover { border-color: #E60000; }
-
         .project-item .project-name {
-            font-size: 1.35rem;
             font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
             font-weight: 400;
             color: #F5F5F5;
             text-decoration: none;
@@ -368,13 +298,13 @@
             align-items: center;
             gap: 0.7rem;
             width: fit-content;
-            transition: color 0.3s ease;
+            transition: color 0.3s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .project-item .project-name::after {
             content: '↗';
-            font-size: 0.9rem;
-            color: #555;
+            font-size: 0.85rem;
+            color: #444;
             transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), color 0.3s ease;
         }
 
@@ -385,48 +315,19 @@
         }
 
         .project-item .project-desc {
-            font-size: 0.98rem;
-            color: #777;
+            font-size: 0.92rem;
+            color: #666;
             line-height: 1.7;
-            max-width: 620px;
+            max-width: 560px;
         }
 
-        /* --- ABOUT / PROJECTS TEXT --- */
-        .prose {
-            color: #999;
-            font-size: 1.1rem;
-            line-height: 1.9;
-            max-width: 640px;
-        }
-
-        .prose + .prose { margin-top: 1.5rem; }
-
-        .prose a {
-            color: #F5F5F5;
-            text-decoration: none;
-            border-bottom: 1px solid #333;
-            transition: border-color 0.3s ease, color 0.3s ease;
-        }
-
-        .prose a:hover {
-            color: #E60000;
-            border-color: #E60000;
-        }
-
-        /* --- GUEDES / GUIDES --- */
+        /* --- GUIDE ACCORDION (minimal, no lines) --- */
         .guide-list {
             display: flex;
             flex-direction: column;
-            border-top: 1px solid #1a1a1a;
-            margin-top: 1rem;
+            gap: 3rem;
+            margin-top: 3rem;
         }
-
-        .guide {
-            border-bottom: 1px solid #1a1a1a;
-            transition: border-color 0.4s ease;
-        }
-
-        .guide.open { border-color: #E60000; }
 
         .guide-header {
             width: 100%;
@@ -435,64 +336,55 @@
             color: inherit;
             font-family: inherit;
             text-align: left;
-            padding: 2rem 0;
+            padding: 0;
             display: flex;
             align-items: flex-start;
-            gap: 1.6rem;
-            transition: padding 0.4s ease;
+            gap: 1.5rem;
         }
-
-        .guide-num {
-            font-size: 0.72rem;
-            letter-spacing: 0.2em;
-            color: #555;
-            font-weight: 500;
-            padding-top: 0.55rem;
-            min-width: 26px;
-            transition: color 0.3s ease;
-        }
-
-        .guide.open .guide-num { color: #E60000; }
 
         .guide-title-wrap {
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.6rem;
         }
 
         .guide-title {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+            font-size: clamp(1.3rem, 2.4vw, 1.8rem);
             font-weight: 400;
-            line-height: 1.3;
+            line-height: 1.25;
             color: #F5F5F5;
-            transition: color 0.3s ease;
+            transition: color 0.4s ease;
         }
 
         .guide-header:hover .guide-title { color: #E60000; }
 
         .guide-desc {
-            font-size: 0.92rem;
+            font-size: 0.9rem;
             color: #666;
             line-height: 1.6;
-            max-width: 620px;
+            max-width: 560px;
         }
 
         .guide-toggle {
             position: relative;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             flex-shrink: 0;
-            margin-top: 0.45rem;
+            margin-top: 0.55rem;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
         }
+
+        .guide-header:hover .guide-toggle { opacity: 1; }
 
         .guide-toggle::before,
         .guide-toggle::after {
             content: '';
             position: absolute;
             background: #F5F5F5;
-            transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1),
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
                         background 0.3s ease;
         }
 
@@ -521,18 +413,16 @@
         .guide-body {
             display: grid;
             grid-template-rows: 0fr;
-            transition: grid-template-rows 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: grid-template-rows 0.7s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .guide.open .guide-body { grid-template-rows: 1fr; }
 
-        .guide-body-inner {
-            overflow: hidden;
-        }
+        .guide-body-inner { overflow: hidden; }
 
         .guide-content {
-            padding: 0 0 3rem 42px;
-            max-width: 780px;
+            padding: 3rem 0 1rem;
+            max-width: 720px;
         }
 
         /* --- MARKDOWN STYLES --- */
@@ -543,30 +433,20 @@
             font-family: 'Playfair Display', serif;
             font-weight: 400;
             color: #F5F5F5;
-            line-height: 1.25;
-            margin: 2.2rem 0 1rem;
+            line-height: 1.3;
+            margin: 2.4rem 0 1rem;
             letter-spacing: -0.01em;
         }
 
-        .guide-content h1 { font-size: 1.9rem; margin-top: 0.5rem; }
-        .guide-content h2 { font-size: 1.5rem; }
-        .guide-content h3 { font-size: 1.2rem; }
+        .guide-content h1 { font-size: 1.8rem; margin-top: 0; }
+        .guide-content h2 { font-size: 1.4rem; }
+        .guide-content h3 { font-size: 1.15rem; }
         .guide-content h4 { font-size: 1rem; color: #ccc; }
 
-        .guide-content h2::before {
-            content: '';
-            display: block;
-            width: 32px;
-            height: 1px;
-            background: #E60000;
-            margin-bottom: 1rem;
-            opacity: 0.7;
-        }
-
         .guide-content p {
-            color: #999;
-            font-size: 1rem;
-            line-height: 1.85;
+            color: #888;
+            font-size: 0.98rem;
+            line-height: 1.9;
             margin-bottom: 1.2rem;
         }
 
@@ -575,38 +455,35 @@
 
         .guide-content ul,
         .guide-content ol {
-            margin: 0 0 1.4rem 1.3rem;
-            color: #999;
-            font-size: 1rem;
-            line-height: 1.85;
+            margin: 0 0 1.4rem 1.2rem;
+            color: #888;
+            font-size: 0.98rem;
+            line-height: 1.9;
         }
 
-        .guide-content li { margin-bottom: 0.5rem; padding-left: 0.3rem; }
+        .guide-content li { margin-bottom: 0.5rem; }
         .guide-content li::marker { color: #E60000; }
 
         .guide-content a {
             color: #E60000;
             text-decoration: none;
-            border-bottom: 1px solid rgba(230, 0, 0, 0.35);
-            transition: border-color 0.3s ease;
+            transition: opacity 0.3s ease;
         }
 
-        .guide-content a:hover { border-color: #E60000; }
+        .guide-content a:hover { opacity: 0.7; }
 
         .guide-content code {
-            background: #161616;
-            border: 1px solid #222;
+            background: #141414;
             padding: 0.15em 0.45em;
-            border-radius: 4px;
+            border-radius: 3px;
             font-family: 'SFMono-Regular', Consolas, monospace;
             font-size: 0.86em;
             color: #e8b3b3;
         }
 
         .guide-content pre {
-            background: #101010;
-            border: 1px solid #1e1e1e;
-            border-radius: 10px;
+            background: #0f0f0f;
+            border-radius: 8px;
             padding: 1.3rem 1.4rem;
             overflow-x: auto;
             margin: 0 0 1.5rem;
@@ -615,25 +492,21 @@
 
         .guide-content pre code {
             background: none;
-            border: none;
             padding: 0;
             color: #d4d4d4;
-            font-size: 0.86rem;
+            font-size: 0.85rem;
         }
 
         .guide-content blockquote {
-            border-left: 2px solid #E60000;
-            padding: 0.2rem 0 0.2rem 1.2rem;
+            padding-left: 1.2rem;
             margin: 0 0 1.4rem;
             color: #888;
             font-style: italic;
         }
 
-        .guide-content blockquote p { margin-bottom: 0; color: #888; }
-
         .guide-content hr {
             border: none;
-            border-top: 1px solid #1e1e1e;
+            border-top: 1px solid #1a1a1a;
             margin: 2.2rem 0;
         }
 
@@ -641,29 +514,27 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 1.5rem;
-            font-size: 0.92rem;
+            font-size: 0.9rem;
         }
 
         .guide-content th,
         .guide-content td {
             text-align: left;
             padding: 0.7rem 0.9rem;
-            border-bottom: 1px solid #1e1e1e;
-            color: #999;
+            color: #888;
         }
 
         .guide-content th {
             color: #F5F5F5;
             font-weight: 500;
             text-transform: uppercase;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             letter-spacing: 0.12em;
         }
 
         .guide-content img {
             max-width: 100%;
-            border-radius: 8px;
-            border: 1px solid #1e1e1e;
+            border-radius: 6px;
             margin: 0.5rem 0 1.5rem;
         }
 
@@ -674,8 +545,6 @@
         }
 
         .md-error {
-            border-left: 2px solid #E60000;
-            padding-left: 1rem;
             color: #999;
             line-height: 1.8;
         }
@@ -683,9 +552,10 @@
         /* --- CONTACT --- */
         .contact-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 3rem 2rem;
-            margin-top: 1rem;
+            margin-top: 3rem;
+            max-width: 900px;
         }
 
         .contact-group {
@@ -695,51 +565,40 @@
         }
 
         .contact-group .label {
-            font-size: 0.68rem;
+            font-size: 0.66rem;
             text-transform: uppercase;
             letter-spacing: 0.22em;
-            color: #555;
+            color: #444;
             font-weight: 500;
         }
 
         .contact-group a,
         .contact-group span {
-            color: #F5F5F5;
+            color: #888;
             text-decoration: none;
-            font-size: 1rem;
+            font-size: 0.98rem;
             transition: color 0.3s ease;
             width: fit-content;
         }
 
-        .contact-group a {
-            border-bottom: 1px solid #333;
-            padding-bottom: 2px;
-        }
-
-        .contact-group a:hover {
-            color: #E60000;
-            border-color: #E60000;
-        }
-
-        .contact-group span { color: #888; }
+        .contact-group a:hover { color: #E60000; }
 
         /* --- FOOTER --- */
         footer {
-            padding: 3rem 0 3rem;
-            border-top: 1px solid #141414;
+            position: absolute;
+            bottom: 2rem;
+            left: 3rem;
+            right: 3rem;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-            font-size: 0.72rem;
+            font-size: 0.68rem;
             text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: #444;
+            letter-spacing: 0.18em;
+            color: #333;
         }
 
         footer a {
-            color: #444;
+            color: #333;
             text-decoration: none;
             transition: color 0.3s ease;
         }
@@ -749,64 +608,54 @@
         /* --- RESPONSIVE --- */
         @media (max-width: 1100px) {
             .dice-wrapper {
-                right: -35%;
-                width: 60vh;
-                height: 60vh;
+                right: -30%;
+                width: 90vh;
+                height: 90vh;
                 opacity: 0.35;
             }
         }
 
         @media (max-width: 900px) {
             nav {
-                padding: 1.2rem 1.5rem;
-                gap: 1rem;
-            }
-
-            .nav-links {
+                top: 1.5rem;
+                right: 1.5rem;
                 gap: 1.4rem;
-                font-size: 0.68rem;
+                font-size: 0.65rem;
             }
 
-            .container { padding: 0 1.5rem; }
+            section { padding: 5rem 1.5rem; }
 
-            section { padding: 6rem 0; }
-
-            .hero { padding: 7rem 0 4rem; }
+            .hero-inner { padding-left: 0; }
 
             .dice-wrapper {
-                top: 12%;
-                right: -45%;
-                width: 75vw;
-                height: 75vw;
+                top: 15%;
+                right: -55%;
+                width: 90vw;
+                height: 90vw;
                 transform: rotate(55deg);
-                opacity: 0.28;
+                opacity: 0.22;
                 animation: none;
             }
 
-            .guide-content { padding-left: 0; }
+            .guide-content { padding-top: 2rem; }
 
-            .guide-header { gap: 1rem; padding: 1.6rem 0; }
-
-            footer { justify-content: center; text-align: center; }
+            footer {
+                left: 1.5rem;
+                right: 1.5rem;
+                font-size: 0.6rem;
+            }
         }
 
         @media (max-width: 560px) {
-            .nav-links { gap: 1rem; font-size: 0.62rem; }
-            .brand-title { font-size: clamp(2.8rem, 16vw, 4rem); }
-            .guide-num { display: none; }
+            nav { gap: 1rem; font-size: 0.58rem; }
+            .brand-title { font-size: clamp(2.6rem, 15vw, 4rem); }
         }
 
-        /* --- REDUCED MOTION --- */
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
-            .cursor,
-            .dice-wrapper,
-            .reveal,
-            .guide-body,
-            .guide-toggle::before,
-            .guide-toggle::after,
-            .brand-title::before,
-            .brand-title::after {
+            .cursor, .dice-wrapper, .reveal, .guide-body,
+            .guide-toggle::before, .guide-toggle::after,
+            .brand-title::before, .brand-title::after {
                 transition: none !important;
                 animation: none !important;
             }
@@ -819,15 +668,12 @@
     <div class="cursor"></div>
 
     <nav>
-        <a href="#home" class="nav-brand">STAATS<span>RAT</span></a>
-        <div class="nav-links">
-            <a href="#home" data-target="home" class="active">Home</a>
-            <a href="#work" data-target="work">Work</a>
-            <a href="#projects" data-target="projects">Projects</a>
-            <a href="#about" data-target="about">About</a>
-            <a href="#guedes" data-target="guedes">Guedes</a>
-            <a href="#contact" data-target="contact">Contact</a>
-        </div>
+        <a href="#home" data-target="home" class="active">Home</a>
+        <a href="#work" data-target="work">Work</a>
+        <a href="#projects" data-target="projects">Projects</a>
+        <a href="#about" data-target="about">About</a>
+        <a href="#guedes" data-target="guedes">Guedes</a>
+        <a href="#contact" data-target="contact">Contact</a>
     </nav>
 
     <!-- HERO -->
@@ -854,9 +700,7 @@
         <div class="container">
             <div class="hero-inner">
                 <h1 class="brand-title" data-text="STAATSRAT">STAATSRAT</h1>
-                <p class="subtitle">
-                    Security research. Open source contributions.
-                </p>
+                <p class="subtitle">Security research. Open source contributions.</p>
                 <div class="links">
                     <a href="https://github.com/Staatsrat" target="_blank" rel="noopener">GitHub</a>
                     <a href="https://x.com/staatsratx" target="_blank" rel="noopener">X</a>
@@ -868,8 +712,7 @@
     <!-- WORK -->
     <section id="work">
         <div class="container">
-            <div class="section-label reveal">01 — Selected Work</div>
-            <h2 class="section-title reveal">Things I've built</h2>
+            <h2 class="section-title reveal">Selected Work</h2>
             <div class="project-list">
                 <div class="project-item reveal">
                     <a href="https://github.com/Staatsrat/icmp_communication" target="_blank" rel="noopener" class="project-name">icmp_communication</a>
@@ -886,12 +729,11 @@
     <!-- PROJECTS -->
     <section id="projects">
         <div class="container">
-            <div class="section-label reveal">02 — Projects</div>
-            <h2 class="section-title reveal">Currently in progress</h2>
+            <h2 class="section-title reveal">Projects</h2>
             <p class="prose reveal">
                 Active learning journey toward the eLearnSecurity Junior Penetration Tester certification.
-                Currently implementing encryption mechanisms for <strong>icmp_communication</strong> to enhance
-                command obfuscation and developing additional security research tools.
+                Currently implementing encryption mechanisms for <strong style="color:#F5F5F5;font-weight:500;">icmp_communication</strong>
+                to enhance command obfuscation and developing additional security research tools.
             </p>
         </div>
     </section>
@@ -899,8 +741,7 @@
     <!-- ABOUT -->
     <section id="about">
         <div class="container">
-            <div class="section-label reveal">03 — About</div>
-            <h2 class="section-title reveal">Who's behind this</h2>
+            <h2 class="section-title reveal">About me</h2>
             <p class="prose reveal">
                 Love testing things, ways they break, how they broke,
                 and how to do it again with less effort.
@@ -911,17 +752,14 @@
     <!-- GUEDES -->
     <section id="guedes">
         <div class="container">
-            <div class="section-label reveal">04 — Guedes</div>
-            <h2 class="section-title reveal">Notes &amp; guides</h2>
-            <p class="prose reveal" style="margin-bottom: 2.5rem;">
+            <h2 class="section-title reveal">Guedes</h2>
+            <p class="prose reveal">
                 Write-ups and practical guides — click an entry to expand it.
             </p>
 
             <div class="guide-list reveal">
-
                 <div class="guide" data-md="Environment.md">
                     <button class="guide-header" type="button" aria-expanded="false">
-                        <span class="guide-num">01</span>
                         <span class="guide-title-wrap">
                             <span class="guide-title">How to create a secure environment to open malicious files</span>
                             <span class="guide-desc">A practical walkthrough for setting up an isolated VM to safely detonate suspicious files.</span>
@@ -934,7 +772,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -942,8 +779,7 @@
     <!-- CONTACT -->
     <section id="contact">
         <div class="container">
-            <div class="section-label reveal">05 — Contact</div>
-            <h2 class="section-title reveal">Get in touch</h2>
+            <h2 class="section-title reveal">Contact</h2>
             <div class="contact-grid reveal">
                 <div class="contact-group">
                     <span class="label">Email</span>
@@ -963,7 +799,7 @@
 
             <footer>
                 <span>© <span id="year"></span> STAATSRAT</span>
-                <a href="#home">Back to top ↑</a>
+                <a href="#home">↑ Back to top</a>
             </footer>
         </div>
     </section>
@@ -976,7 +812,7 @@
             const cursor = document.querySelector('.cursor');
             const diceWrapper = document.getElementById('diceWrapper');
             const guideEls = document.querySelectorAll('.guide');
-            const navLinks = document.querySelectorAll('.nav-links a');
+            const navLinks = document.querySelectorAll('nav a');
             const sections = document.querySelectorAll('section[id]');
 
             document.getElementById('year').textContent = new Date().getFullYear();
@@ -1000,7 +836,7 @@
                         revealObserver.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+            }, { threshold: 0.15, rootMargin: '0px 0px -80px 0px' });
 
             document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
@@ -1014,7 +850,7 @@
                         });
                     }
                 });
-            }, { threshold: 0.25, rootMargin: '-30% 0px -55% 0px' });
+            }, { threshold: 0.4 });
 
             sections.forEach(sec => navObserver.observe(sec));
 
@@ -1041,7 +877,7 @@
                     content.innerHTML =
                         '<p class="md-error">Could not load <code>' + file + '</code>.<br><br>' +
                         'Make sure the file exists next to <code>index.html</code> and that the site is served over HTTP ' +
-                        '(e.g. <code>python3 -m http.server</code>) — browsers block <code>fetch()</code> on <code>file://</code>.</p>';
+                        '(e.g. <code>python3 -m http.server</code>).</p>';
                 }
             }
 
@@ -1051,7 +887,6 @@
                 header.addEventListener('click', () => {
                     const isOpen = guide.classList.contains('open');
 
-                    // Close all others
                     guideEls.forEach(g => {
                         g.classList.remove('open');
                         g.querySelector('.guide-header').setAttribute('aria-expanded', 'false');
