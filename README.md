@@ -1,5 +1,2 @@
 # Website
-my website
-sollte gehen
-# Website
-my website sollte gehen ist 1 version von deepseek
+This is the source code to my website.
