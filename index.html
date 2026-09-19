@@ -1,35 +1,629 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>STAATSRAT</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{background:#0a0a0a;color:#f5f5f5;font-family:Inter,sans-serif;font-weight:300;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}::selection{background:#e60000;color:#fff}
-nav{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:1.6rem 3rem;background:rgba(10,10,10,.58);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.05)}.nav-brand{font:600 1.05rem 'Playfair Display',serif;letter-spacing:.05em;color:#f5f5f5;text-decoration:none}.nav-brand span{color:#e60000}.nav-links{display:flex;gap:2.2rem;font-size:.72rem;text-transform:uppercase;letter-spacing:.16em;font-weight:500}.nav-links a{color:#f5f5f5;text-decoration:none;opacity:.48;transition:.3s}.nav-links a:hover,.nav-links a.active{color:#e60000;opacity:1}
-.dice-wrapper{position:fixed;top:50%;right:-12%;width:min(110vh,900px);height:min(110vh,900px);z-index:0;pointer-events:none;transform:translateY(-50%) rotate(55deg);opacity:.62}.dice-svg{width:100%;height:100%;fill:#a00000;filter:drop-shadow(0 0 24px rgba(230,0,0,.12))}.dice-dot{fill:#0a0a0a}
-section{min-height:100vh;display:flex;align-items:center;padding:7rem 3rem;position:relative;z-index:1;background:transparent}.container{width:100%;max-width:1200px;margin:auto}.hero{padding:0;overflow:hidden}.hero-inner{display:flex;flex-direction:column;gap:2rem;position:relative;z-index:2;max-width:720px}.brand-title{font:400 clamp(3.5rem,9vw,8rem)/.95 'Playfair Display',serif;letter-spacing:-.03em;position:relative;display:inline-block}.brand-title:before,.brand-title:after{content:attr(data-text);position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:.75}.brand-title:before{left:3px;text-shadow:-3px 0 #e60000;animation:glitch1 3s infinite linear alternate-reverse}.brand-title:after{left:-3px;text-shadow:3px 0 #fff;animation:glitch2 2.5s infinite linear alternate-reverse}@keyframes glitch1{0%{clip-path:inset(12% 0 70% 0)}20%{clip-path:inset(55% 0 20% 0)}40%{clip-path:inset(30% 0 45% 0)}60%{clip-path:inset(75% 0 8% 0)}80%{clip-path:inset(5% 0 80% 0)}100%{clip-path:inset(45% 0 35% 0)}}@keyframes glitch2{0%{clip-path:inset(65% 0 15% 0)}25%{clip-path:inset(8% 0 70% 0)}50%{clip-path:inset(42% 0 35% 0)}75%{clip-path:inset(78% 0 5% 0)}100%{clip-path:inset(20% 0 55% 0)}}.subtitle{font-size:1.05rem;color:#777;max-width:440px}.links{display:flex;gap:2rem}.links a{color:#f5f5f5;text-decoration:none;text-transform:uppercase;letter-spacing:.16em;font-size:.78rem;font-weight:500;transition:.3s}.links a:hover{color:#e60000}
-.section-title{font:400 clamp(2.5rem,6vw,5rem)/1.05 'Playfair Display',serif}.prose{color:#888;font-size:1.05rem;line-height:1.9;max-width:620px;margin-top:2.5rem}.project-list{display:flex;flex-direction:column;gap:2.5rem;margin-top:3rem}.project-item{display:flex;flex-direction:column;gap:.5rem}.project-name{font:400 1.4rem 'Playfair Display',serif;color:#f5f5f5;text-decoration:none;width:max-content;transition:.3s}.project-name:hover{color:#e60000}.project-desc{font-size:.92rem;color:#666;max-width:620px}
-#work .container,#about .container,#guedes .container{margin-left:0;margin-right:auto;text-align:left}#projects .container,#contact .container{margin-left:auto;margin-right:0;text-align:right}#projects .prose{margin-left:auto}#contact .contact-grid{margin-left:auto;text-align:right}#contact .contact-group{align-items:flex-end}
-.guide-list{margin-top:3rem;max-width:800px}.guide-header{width:100%;padding:0;background:none;border:0;color:inherit;text-align:left;display:flex;justify-content:space-between;gap:1rem}.guide-title{font:400 clamp(1.3rem,2.4vw,1.8rem) 'Playfair Display',serif}.guide-desc{display:block;color:#666;font-size:.9rem;margin-top:.5rem}.guide-toggle{width:20px;height:20px;position:relative;flex:none;margin-top:.5rem}.guide-toggle:before,.guide-toggle:after{content:'';position:absolute;background:#f5f5f5}.guide-toggle:before{width:100%;height:1px;top:50%}.guide-toggle:after{height:100%;width:1px;left:50%}.guide.open .guide-toggle:after{transform:rotate(90deg)}.guide-body{display:grid;grid-template-rows:0fr;transition:.6s}.guide.open .guide-body{grid-template-rows:1fr}.guide-body-inner{overflow:hidden}.guide-content{padding:2rem 0;color:#888}.guide-content h1,.guide-content h2,.guide-content h3{font-family:'Playfair Display',serif;color:#f5f5f5;margin:1.8rem 0 .8rem}.guide-content p{margin-bottom:1rem}.guide-content a{color:#e60000}.guide-content pre{background:#111;padding:1rem;overflow-x:auto;margin:1rem 0}.guide-content code{font-family:monospace;color:#e8b3b3}.guide-content ul,.guide-content ol{margin:0 0 1rem 1.5rem}
-.contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:3rem;margin-top:3rem}.contact-group{display:flex;flex-direction:column;gap:.6rem}.label{font-size:.66rem;text-transform:uppercase;letter-spacing:.22em;color:#444}.contact-group a,.contact-group span:not(.label){color:#888;text-decoration:none}.contact-group a:hover{color:#e60000}footer{margin-top:6rem;padding-top:2rem;border-top:1px solid #181818;display:flex;justify-content:space-between;color:#444;font-size:.7rem;text-transform:uppercase;letter-spacing:.15em}footer a{color:#444;text-decoration:none}
-@media(max-width:900px){nav{padding:1.2rem 1.5rem}.nav-links{gap:1rem;font-size:.62rem}section{padding:6rem 1.5rem}.dice-wrapper{right:-48%;width:80vw;height:80vw;opacity:.3}#projects .container,#contact .container{margin-left:0;margin-right:auto;text-align:left}#projects .prose{margin-left:0}#contact .contact-grid{text-align:left;margin-left:0}#contact .contact-group{align-items:flex-start}}@media(max-width:560px){.nav-brand{font-size:.9rem}.nav-links{gap:.7rem}.brand-title{font-size:clamp(2.8rem,15vw,4rem)}footer{flex-direction:column;gap:1rem}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.brand-title:before,.brand-title:after{animation:none}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STAATSRAT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --panel: rgba(18, 18, 18, 0.72);
+      --panel-strong: rgba(18, 18, 18, 0.9);
+      --text: #f5f5f5;
+      --muted: #8f8f8f;
+      --line: rgba(255,255,255,0.08);
+      --accent: #d8d0c4;
+      --dot: #b9a98f;
+      --shadow: rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img, svg { display: block; max-width: 100%; }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.6rem 3rem;
+      background: rgba(10,10,10,.58);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,.04);
+    }
+
+    .nav-brand {
+      font-size: .72rem;
+      font-weight: 500;
+      letter-spacing: .55rem;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .nav-brand span { color: #7e7e7e; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-size: .64rem;
+      letter-spacing: .18rem;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.72);
+    }
+    .nav-links a {
+      position: relative;
+      opacity: .75;
+      transition: opacity .2s ease;
+    }
+    .nav-links a.active,
+    .nav-links a:hover {
+      opacity: 1;
+    }
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -0.35rem;
+      margin: auto;
+      width: 0;
+      height: 1px;
+      background: rgba(255,255,255,.9);
+      transition: width .2s ease;
+    }
+    .nav-links a.active::after,
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-toggle {
+      display: none;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.02);
+      border-radius: 999px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+    }
+    .nav-toggle span {
+      width: 18px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      display: block;
+      position: relative;
+      transition: transform .2s ease, opacity .2s ease;
+    }
+    .nav-toggle span + span { margin-top: 4px; }
+    .nav-open .nav-toggle span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .nav-open .nav-toggle span:nth-child(2) { opacity: 0; }
+    .nav-open .nav-toggle span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    .dice-wrapper {
+      position: fixed;
+      top: 50%;
+      right: -14%;
+      width: min(120vh, 980px);
+      height: min(120vh, 980px);
+      z-index: 0;
+      pointer-events: none;
+      transform: translateY(-50%) rotate(55deg);
+      opacity: .7;
+      filter: drop-shadow(0 35px 55px rgba(0,0,0,.42));
+    }
+    .dice-svg {
+      width: 100%;
+      height: 100%;
+      opacity: .82;
+    }
+    .dice-dot { fill: rgba(255,255,255,.16); }
+    .dice-line { stroke: rgba(255,255,255,.09); }
+
+    .page-shell {
+      position: relative;
+      z-index: 1;
+    }
+
+    section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 7rem 3rem;
+      position: relative;
+      z-index: 1;
+      background: transparent;
+    }
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero { padding: 0; overflow: hidden; }
+    .hero-inner {
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+    .brand-title {
+      font-size: clamp(4.8rem, 9vw, 12rem);
+      font-family: 'Playfair Display', serif;
+      font-weight: 400;
+      letter-spacing: .02em;
+      line-height: .8;
+      position: relative;
+      color: rgba(255,255,255,.92);
+      text-shadow: 0 10px 25px rgba(0,0,0,.2);
+    }
+    .brand-title::before {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      color: rgba(216,208,196,.14);
+      transform: translate(0.12em, 0.08em);
+      filter: blur(2px);
+      pointer-events: none;
+    }
+    .subtitle {
+      margin-top: 1.4rem;
+      color: rgba(255,255,255,.7);
+      font-size: clamp(0.78rem, 1.2vw, 1.08rem);
+      letter-spacing: .26rem;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      font: 400 clamp(2.5rem, 6vw, 5rem)/1.05 'Playfair Display', serif;
+      margin-bottom: 1.2rem;
+      letter-spacing: -.04em;
+    }
+    .prose {
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.9;
+      max-width: 620px;
+      margin-top: 2.5rem;
+    }
+    .prose strong { color: rgba(255,255,255,.76); }
+
+    #work .container,
+    #about .container,
+    #guedes .container {
+      margin-left: 0;
+      margin-right: auto;
+      text-align: left;
+    }
+    #projects .container,
+    #contact .container {
+      margin-left: auto;
+      margin-right: 0;
+      text-align: right;
+    }
+
+    .project-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-top: 2.5rem;
+      max-width: 720px;
+    }
+    .project-item {
+      padding: 1.25rem 0;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .project-item:last-child { border-bottom: 1px solid var(--line); }
+    .project-name {
+      font-size: clamp(1.1rem, 2vw, 1.7rem);
+      font-weight: 400;
+      color: rgba(255,255,255,.9);
+    }
+    .project-meta {
+      color: rgba(255,255,255,.48);
+      letter-spacing: .14rem;
+      text-transform: uppercase;
+      font-size: .62rem;
+      white-space: nowrap;
+    }
+
+    .overview-card {
+      margin-top: 2.5rem;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.02);
+      padding: 1.5rem 1.75rem;
+      max-width: 520px;
+      border-radius: 18px;
+      box-shadow: 0 18px 30px rgba(0,0,0,.15);
+    }
+    .overview-card p {
+      margin: 0;
+      color: rgba(255,255,255,.76);
+      font-size: .96rem;
+      line-height: 1.8;
+    }
+
+    .guide-list {
+      margin-top: 3rem;
+      max-width: 800px;
+    }
+    .guide-item {
+      border-top: 1px solid var(--line);
+      overflow: hidden;
+    }
+    .guide-item:last-child {
+      border-bottom: 1px solid var(--line);
+    }
+    .guide-header {
+      width: 100%;
+      padding: 1.3rem 0;
+      background: none;
+      border: 0;
+      color: inherit;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      cursor: pointer;
+      font: inherit;
+    }
+    .guide-title {
+      font-size: clamp(1.1rem, 2vw, 1.6rem);
+      color: rgba(255,255,255,.92);
+      font-weight: 400;
+    }
+    .guide-toggle {
+      color: rgba(255,255,255,.58);
+      font-size: 1.8rem;
+      line-height: 1;
+      transition: transform .2s ease;
+    }
+    .guide-item.is-open .guide-toggle {
+      transform: rotate(45deg);
+    }
+    .guide-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .28s ease;
+      padding: 0 0 0 0;
+    }
+    .guide-item.is-open .guide-body {
+      max-height: 700px;
+      padding: 0 0 1.7rem;
+    }
+    .guide-body p,
+    .guide-body li {
+      color: var(--muted);
+      font-size: .98rem;
+      line-height: 1.8;
+    }
+    .guide-body ul {
+      margin-top: .8rem;
+      padding-left: 1.25rem;
+    }
+    .guide-body a {
+      color: rgba(255,255,255,.8);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 3rem;
+      margin-top: 3rem;
+      max-width: 620px;
+      margin-left: auto;
+    }
+    .contact-group {
+      display: flex;
+      flex-direction: column;
+      gap: .6rem;
+    }
+    .label {
+      font-size: .66rem;
+      letter-spacing: .2rem;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.5);
+    }
+    .contact-link {
+      color: rgba(255,255,255,.9);
+      font-size: 1.05rem;
+    }
+
+    #contact {
+      padding-bottom: 2rem;
+      border-bottom: none;
+    }
+    #contact::after {
+      content: none;
+    }
+
+    @media (max-width: 900px) {
+      nav {
+        padding: 1.2rem 1.5rem;
+      }
+
+      .nav-toggle {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .nav-links {
+        position: absolute;
+        top: calc(100% + .6rem);
+        right: 1rem;
+        left: 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: .8rem;
+        padding: 0 1rem;
+        background: rgba(18,18,18,.9);
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 18px;
+        box-shadow: 0 30px 50px rgba(0,0,0,.32);
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: max-height .25s ease, opacity .2s ease, padding .25s ease;
+      }
+      .nav-open .nav-links {
+        max-height: 350px;
+        opacity: 1;
+        padding: 1rem;
+      }
+      .nav-links a {
+        width: 100%;
+      }
+      .nav-links a::after { display: none; }
+
+      section {
+        padding: 6rem 1.5rem;
+      }
+
+      .dice-wrapper {
+        top: 56%;
+        right: -38%;
+        width: 118vw;
+        height: 118vw;
+        opacity: .42;
+        transform: translateY(-50%) rotate(55deg);
+      }
+
+      #projects .container,
+      #contact .container {
+        margin-left: 0;
+        margin-right: 0;
+        text-align: left;
+      }
+      .contact-grid {
+        margin-left: 0;
+        max-width: 100%;
+      }
+      .hero-inner { min-height: 92vh; }
+    }
+
+    @media (max-width: 560px) {
+      .brand-title {
+        font-size: clamp(3.2rem, 22vw, 6rem);
+      }
+      .subtitle {
+        letter-spacing: .16rem;
+        font-size: .68rem;
+      }
+      .prose {
+        font-size: .96rem;
+      }
+      .dice-wrapper {
+        right: -52%;
+        width: 132vw;
+        height: 132vw;
+        opacity: .35;
+        top: 58%;
+      }
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 1.75rem;
+      }
+    }
+  </style>
 </head>
 <body>
-<nav><a class="nav-brand" href="#home">STAATS<span>RAT</span></a><div class="nav-links"><a href="#home" data-target="home" class="active">Home</a><a href="#work" data-target="work">Work</a><a href="#projects" data-target="projects">Projects</a><a href="#about" data-target="about">About</a><a href="#guedes" data-target="guedes">Guedes</a><a href="#contact" data-target="contact">Contact</a></div></nav>
-<div class="dice-wrapper" aria-hidden="true"><svg class="dice-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="160" height="160" rx="20"/><circle class="dice-dot" cx="65" cy="60" r="14"/><circle class="dice-dot" cx="135" cy="60" r="14"/><circle class="dice-dot" cx="65" cy="100" r="14"/><circle class="dice-dot" cx="135" cy="100" r="14"/><circle class="dice-dot" cx="65" cy="140" r="14"/><circle class="dice-dot" cx="135" cy="140" r="14"/></svg></div>
-<section class="hero" id="home"><div class="container"><div class="hero-inner"><h1 class="brand-title" data-text="STAATSRAT">STAATSRAT</h1><p class="subtitle">Security research. Open source contributions.</p><div class="links"><a href="https://github.com/Staatsrat" target="_blank" rel="noopener">GitHub</a><a href="https://x.com/staatsratx" target="_blank" rel="noopener">X</a></div></div></div></section>
-<section id="work"><div class="container"><h2 class="section-title">Selected Work</h2><div class="project-list"><div class="project-item"><a class="project-name" href="https://github.com/Staatsrat/icmp_communication" target="_blank" rel="noopener">icmp_communication</a><span class="project-desc">Covert C2 channel over ICMP packet sizes. Commands are encoded in the echo request length — no payload needed.</span></div><div class="project-item"><a class="project-name" href="https://github.com/Staatsrat/tor_keep" target="_blank" rel="noopener">tor_keep</a><span class="project-desc">Tor connection monitoring and keep-alive utility.</span></div></div></div></section>
-<section id="projects"><div class="container"><h2 class="section-title">Projects</h2><p class="prose">Active learning journey toward the eLearnSecurity Junior Penetration Tester certification. Currently implementing encryption mechanisms for <strong>icmp_communication</strong> to enhance command obfuscation and developing additional security research tools.</p></div></section>
-<section id="about"><div class="container"><h2 class="section-title">About me</h2><p class="prose">Love testing things, ways they break, how they broke, and how to do it again with less effort.</p></div></section>
-<section id="guedes"><div class="container"><h2 class="section-title">Guedes</h2><p class="prose">Write-ups and practical guides — click an entry to expand it.</p><div class="guide-list"><div class="guide" data-md="Guide/golden_vm.md"><button class="guide-header" type="button" aria-expanded="false"><span><span class="guide-title">Golden VM</span><span class="guide-desc">A practical guide for creating an isolated Windows malware-analysis environment with Hyper-V.</span></span><span class="guide-toggle" aria-hidden="true"></span></button><div class="guide-body"><div class="guide-body-inner"><div class="guide-content"></div></div></div></div></div></div></section>
-<section id="contact"><div class="container"><h2 class="section-title">Contact</h2><div class="contact-grid"><div class="contact-group"><span class="label">Email</span><span>mail@staatsrat.me</span></div><div class="contact-group"><span class="label">Web</span><a href="https://staatsrat.me">staatsrat.me</a></div><div class="contact-group"><span class="label">Social</span><a href="https://x.com/staatsratx">x.com/staatsratx</a><a href="https://www.reddit.com/user/staatsrat/">reddit.com/user/staatsrat</a><a href="https://www.youtube.com/@staatsrat">youtube.com/@staatsrat</a></div></div><footer><span>© <span id="year"></span> STAATSRAT</span><a href="#home">↑ Back to top</a></footer></div></section>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script><script>
-document.addEventListener('DOMContentLoaded',()=>{const navLinks=document.querySelectorAll('.nav-links a');document.getElementById('year').textContent=new Date().getFullYear();const observer=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)navLinks.forEach(l=>l.classList.toggle('active',l.dataset.target===e.target.id))}),{threshold:.4});document.querySelectorAll('section[id]').forEach(s=>observer.observe(s));document.querySelectorAll('.guide').forEach(g=>{g.querySelector('.guide-header').addEventListener('click',async()=>{const open=g.classList.toggle('open'),header=g.querySelector('.guide-header');header.setAttribute('aria-expanded',open);if(open&&!g.dataset.loaded){const content=g.querySelector('.guide-content'),file=g.dataset.md;content.innerHTML='<p>Loading guide…</p>';try{const response=await fetch(file,{cache:'no-cache'});if(!response.ok)throw new Error('HTTP '+response.status);const text=await response.text();content.innerHTML=window.marked&&typeof marked.parse==='function'?marked.parse(text):'<pre>'+text.replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]))+'</pre>';g.dataset.loaded='true'}catch(e){content.innerHTML='<p>Could not load <code>'+file+'</code>.</p>'}}})})});
-</script>
+  <nav id="main-nav">
+    <a class="nav-brand" href="#home">STAATS<span>RAT</span></a>
+    <button class="nav-toggle" aria-label="Menu toggle" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="nav-links">
+      <a href="#home" class="active">Home</a>
+      <a href="#work">Work</a>
+      <a href="#projects">Projects</a>
+      <a href="#about">About</a>
+      <a href="#guedes">Guedes</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <div class="dice-wrapper" aria-hidden="true">
+    <svg class="dice-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="20" width="160" height="160" rx="20" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.1)"/>
+      <path class="dice-line" d="M20 56H180M20 100H180M20 144H180M56 20V180M100 20V180M144 20V180" fill="none" stroke-width="1"/>
+      <circle class="dice-dot" cx="56" cy="56" r="7"/>
+      <circle class="dice-dot" cx="144" cy="56" r="7"/>
+      <circle class="dice-dot" cx="100" cy="100" r="7"/>
+      <circle class="dice-dot" cx="56" cy="144" r="7"/>
+      <circle class="dice-dot" cx="144" cy="144" r="7"/>
+      <circle class="dice-dot" cx="100" cy="34" r="4.5"/>
+      <circle class="dice-dot" cx="100" cy="166" r="4.5"/>
+      <circle class="dice-dot" cx="34" cy="100" r="4.5"/>
+      <circle class="dice-dot" cx="166" cy="100" r="4.5"/>
+    </svg>
+  </div>
+
+  <div class="page-shell">
+    <section class="hero" id="home">
+      <div class="container">
+        <div class="hero-inner">
+          <h1 class="brand-title" data-text="STAATSRAT">STAATSRAT</h1>
+          <p class="subtitle">Security research. Open source contributions. Practical tooling.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="work">
+      <div class="container">
+        <h2 class="section-title">Selected Work</h2>
+        <div class="project-list">
+          <div class="project-item">
+            <a class="project-name" href="https://github.com/Staatsrat/icm?tab=readme-ov-file" target="_blank" rel="noreferrer">icm</a>
+            <span class="project-meta">C / tooling</span>
+          </div>
+          <div class="project-item">
+            <a class="project-name" href="https://github.com/Staatsrat/Windows-Sandbox-Utilities" target="_blank" rel="noreferrer">Windows Sandbox Utilities</a>
+            <span class="project-meta">Automation</span>
+          </div>
+          <div class="project-item">
+            <a class="project-name" href="https://github.com/Staatsrat/Golden-VM" target="_blank" rel="noreferrer">Golden VM</a>
+            <span class="project-meta">Malware analysis</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="container">
+        <h2 class="section-title">Projects</h2>
+        <p class="prose">Active learning journey toward the eLearnSecurity Junior Penetration Tester certification. Current focus is on practical offensive security, red teaming workflows, and learning by doing in a controlled environment.</p>
+        <div class="overview-card">
+          <p><strong>Current track:</strong> building a repeatable lab setup, creating windows-based analysis environments, and documenting the process so it can be recreated without guesswork.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="container">
+        <h2 class="section-title">About me</h2>
+        <p class="prose">Love testing things, ways they break, how they broke, and how to do it again with less effort.</p>
+      </div>
+    </section>
+
+    <section id="guedes">
+      <div class="container">
+        <h2 class="section-title">Guedes</h2>
+        <p class="prose">Write-ups and practical guides — click an entry to expand it.</p>
+        <div class="guide-list">
+          <div class="guide-item is-open">
+            <button class="guide-header" type="button">
+              <span class="guide-title">Golden Windows VM</span>
+              <span class="guide-toggle">+</span>
+            </button>
+            <div class="guide-body">
+              <p>A practical guide to building a clean Windows analysis environment for malware and security research with Hyper-V, checkpoints, and isolation rules.</p>
+              <ul>
+                <li><a href="Guide/golden_vm.md">Open the guide</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <h2 class="section-title">Contact</h2>
+        <div class="contact-grid">
+          <div class="contact-group">
+            <span class="label">Email</span>
+            <a class="contact-link" href="mailto:mail@staatsrat.me">mail@staatsrat.me</a>
+          </div>
+          <div class="contact-group">
+            <span class="label">GitHub</span>
+            <a class="contact-link" href="https://github.com/Staatsrat" target="_blank" rel="noreferrer">github.com/Staatsrat</a>
+          </div>
+          <div class="contact-group">
+            <span class="label">Year</span>
+            <span class="contact-link" id="year">2026</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const nav = document.getElementById('main-nav');
+      const toggle = document.querySelector('.nav-toggle');
+      const navLinks = document.querySelectorAll('.nav-links a');
+      const yearNode = document.getElementById('year');
+      yearNode.textContent = new Date().getFullYear();
+
+      toggle.addEventListener('click', () => {
+        const isOpen = nav.classList.toggle('nav-open');
+        toggle.setAttribute('aria-expanded', String(isOpen));
+      });
+
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          navLinks.forEach(item => item.classList.remove('active'));
+          link.classList.add('active');
+          nav.classList.remove('nav-open');
+          toggle.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      const sections = document.querySelectorAll('section[id]');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          navLinks.forEach(link => {
+            const isActive = link.getAttribute('href') === '#' + entry.target.id;
+            link.classList.toggle('active', isActive);
+          });
+        });
+      }, { threshold: 0.45 });
+
+      sections.forEach(section => observer.observe(section));
+
+      const guideItems = document.querySelectorAll('.guide-item');
+      guideItems.forEach(item => {
+        const btn = item.querySelector('.guide-header');
+        btn.addEventListener('click', () => {
+          const isOpen = item.classList.contains('is-open');
+          guideItems.forEach(other => other.classList.remove('is-open'));
+          if (!isOpen) item.classList.add('is-open');
+        });
+      });
+    });
+  </script>
 </body>
 </html>
