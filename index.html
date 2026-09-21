@@ -9,32 +9,60 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{background:#0a0a0a;color:#f5f5f5;font-family:Inter,sans-serif;font-weight:300;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}::selection{background:#e60000;color:#fff}
+
+/* Dice-Größe: durch vh UND vw begrenzt, damit auf Tablets nicht riesig */
+:root{
+  --dice-size:min(110vh, 900px, 55vw);
+}
+
 nav{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:1.6rem 3rem;background:rgba(10,10,10,.58);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.05)}.nav-brand{font:600 1.05rem 'Playfair Display',serif;letter-spacing:.05em;color:#f5f5f5;text-decoration:none}.nav-brand span{color:#e60000}.nav-links{display:flex;gap:2.2rem;font-size:.72rem;text-transform:uppercase;letter-spacing:.16em;font-weight:500}.nav-links a{color:#f5f5f5;text-decoration:none;opacity:.48;transition:.3s}.nav-links a:hover,.nav-links a.active{color:#e60000;opacity:1}
 .nav-toggle{display:none;background:none;border:0;cursor:pointer;padding:0;width:28px;height:20px;position:relative;z-index:11;flex-direction:column;justify-content:space-between}
 .nav-toggle span{display:block;height:2px;width:100%;background:#f5f5f5;transition:transform .3s,opacity .3s}
 .nav-toggle.open span:nth-child(1){transform:translateY(9px) rotate(45deg)}
 .nav-toggle.open span:nth-child(2){opacity:0}
 .nav-toggle.open span:nth-child(3){transform:translateY(-9px) rotate(-45deg)}
-.dice-wrapper{position:fixed;top:50%;right:-12%;width:min(110vh,900px);height:min(110vh,900px);z-index:0;pointer-events:none;transform:translateY(-50%) rotate(55deg);opacity:.62}.dice-svg{width:100%;height:100%;fill:#a00000;filter:drop-shadow(0 0 24px rgba(230,0,0,.12))}.dice-dot{fill:#0a0a0a}
-section{min-height:100vh;display:flex;align-items:center;padding:7rem 3rem;position:relative;z-index:1;background:transparent}.container{width:100%;max-width:1200px;margin:auto}.hero{padding:0 3rem;overflow:hidden}.hero-inner{display:flex;flex-direction:column;gap:2rem;position:relative;z-index:2;max-width:720px}.brand-title{font:400 clamp(3.5rem,9vw,8rem)/.95 'Playfair Display',serif;letter-spacing:-.03em;position:relative;display:inline-block}.brand-title:before,.brand-title:after{content:attr(data-text);position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:.75}.brand-title:before{left:3px;text-shadow:-3px 0 #e60000;animation:glitch1 3s infinite linear alternate-reverse}.brand-title:after{left:-3px;text-shadow:3px 0 #fff;animation:glitch2 2.5s infinite linear alternate-reverse}@keyframes glitch1{0%{clip-path:inset(12% 0 70% 0)}20%{clip-path:inset(55% 0 20% 0)}40%{clip-path:inset(30% 0 45% 0)}60%{clip-path:inset(75% 0 8% 0)}80%{clip-path:inset(5% 0 80% 0)}100%{clip-path:inset(45% 0 35% 0)}}@keyframes glitch2{0%{clip-path:inset(65% 0 15% 0)}25%{clip-path:inset(8% 0 70% 0)}50%{clip-path:inset(42% 0 35% 0)}75%{clip-path:inset(78% 0 5% 0)}100%{clip-path:inset(20% 0 55% 0)}}.subtitle{font-size:1.05rem;color:#777;max-width:440px}.links{display:flex;gap:2rem}.links a{color:#f5f5f5;text-decoration:none;text-transform:uppercase;letter-spacing:.16em;font-size:.78rem;font-weight:500;transition:.3s}.links a:hover{color:#e60000}
+.dice-wrapper{position:fixed;top:50%;right:-12%;width:var(--dice-size);height:var(--dice-size);z-index:0;pointer-events:none;transform:translateY(-50%) rotate(55deg);opacity:.62}.dice-svg{width:100%;height:100%;fill:#a00000;filter:drop-shadow(0 0 24px rgba(230,0,0,.12))}.dice-dot{fill:#0a0a0a}
+section{min-height:100vh;display:flex;align-items:center;padding:7rem 3rem;position:relative;z-index:1;background:transparent}.container{width:100%;max-width:1200px;margin:auto}.hero{padding:0 3rem;overflow:hidden}
+.hero-inner{display:flex;flex-direction:column;gap:2rem;position:relative;z-index:2;max-width:min(720px, calc(100vw - var(--dice-size) * 1.08 - 4rem));container-type:inline-size}
+.brand-title{font:400 clamp(2rem, min(9vw, 15cqi), 8rem)/.95 'Playfair Display',serif;letter-spacing:-.03em;position:relative;display:inline-block;white-space:nowrap}
+.brand-title:before,.brand-title:after{content:attr(data-text);position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:.75}
+.brand-title:before{left:3px;text-shadow:-3px 0 #e60000;animation:glitch1 3s infinite linear alternate-reverse}
+.brand-title:after{left:-3px;text-shadow:3px 0 #fff;animation:glitch2 2.5s infinite linear alternate-reverse}
+/* "RAT" – genau der Rotton der Auswahl (::selection), gleiche Schriftgröße */
+.brand-title .mark{background:#e60000;color:#fff}
+@keyframes glitch1{0%{clip-path:inset(12% 0 70% 0)}20%{clip-path:inset(55% 0 20% 0)}40%{clip-path:inset(30% 0 45% 0)}60%{clip-path:inset(75% 0 8% 0)}80%{clip-path:inset(5% 0 80% 0)}100%{clip-path:inset(45% 0 35% 0)}}
+@keyframes glitch2{0%{clip-path:inset(65% 0 15% 0)}25%{clip-path:inset(8% 0 70% 0)}50%{clip-path:inset(42% 0 35% 0)}75%{clip-path:inset(78% 0 5% 0)}100%{clip-path:inset(20% 0 55% 0)}}
+.subtitle{font-size:1.05rem;color:#777;max-width:440px}.links{display:flex;gap:2rem}.links a{color:#f5f5f5;text-decoration:none;text-transform:uppercase;letter-spacing:.16em;font-size:.78rem;font-weight:500;transition:.3s}.links a:hover{color:#e60000}
 .section-title{font:400 clamp(2.5rem,6vw,5rem)/1.05 'Playfair Display',serif}.prose{color:#888;font-size:1.05rem;line-height:1.9;max-width:620px;margin-top:2.5rem}.project-list{display:flex;flex-direction:column;gap:2.5rem;margin-top:3rem}.project-item{display:flex;flex-direction:column;gap:.5rem}.project-name{font:400 1.4rem 'Playfair Display',serif;color:#f5f5f5;text-decoration:none;width:max-content;transition:.3s}.project-name:hover{color:#e60000}.project-desc{font-size:.92rem;color:#666;max-width:620px}
 #work .container,#about .container,#guides .container{margin-left:0;margin-right:auto;text-align:left}#projects .container,#contact .container{margin-left:auto;margin-right:0;text-align:right}#projects .prose{margin-left:auto}#contact .contact-grid{margin-left:auto;text-align:right}#contact .contact-group{align-items:flex-end}
 .guide-list{margin-top:3rem;max-width:800px}.guide-header{width:100%;padding:0;background:none;border:0;color:inherit;text-align:left;display:flex;justify-content:space-between;gap:1rem}.guide-title{font:400 clamp(1.3rem,2.4vw,1.8rem) 'Playfair Display',serif}.guide-desc{display:block;color:#666;font-size:.9rem;margin-top:.5rem}.guide-toggle{width:20px;height:20px;position:relative;flex:none;margin-top:.5rem}.guide-toggle:before,.guide-toggle:after{content:'';position:absolute;background:#f5f5f5}.guide-toggle:before{width:100%;height:1px;top:50%}.guide-toggle:after{height:100%;width:1px;left:50%}.guide.open .guide-toggle:after{transform:rotate(90deg)}.guide-body{display:grid;grid-template-rows:0fr;transition:.6s}.guide.open .guide-body{grid-template-rows:1fr}.guide-body-inner{overflow:hidden}.guide-content{padding:2rem 0;color:#888}.guide-content h1,.guide-content h2,.guide-content h3{font-family:'Playfair Display',serif;color:#f5f5f5;margin:1.8rem 0 .8rem}.guide-content p{margin-bottom:1rem}.guide-content a{color:#e60000}.guide-content pre{background:#111;padding:1rem;overflow-x:auto;margin:1rem 0}.guide-content code{font-family:monospace;color:#e8b3b3}.guide-content ul,.guide-content ol{margin:0 0 1rem 1.5rem}
-.contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:3rem;margin-top:3rem}.contact-group{display:flex;flex-direction:column;gap:.6rem}.label{font-size:.66rem;text-transform:uppercase;letter-spacing:.22em;color:#444}.contact-group a,.contact-group span:not(.label){color:#888;text-decoration:none}.contact-group a:hover{color:#e60000}footer{margin-top:6rem;padding-top:2rem;display:flex;justify-content:space-between;color:#444;font-size:.7rem;text-transform:uppercase;letter-spacing:.15em}footer a{color:#444;text-decoration:none}
-@media(max-width:900px){
+
+/* ---- Kontakt: hellere, besser lesbare Farben ---- */
+.contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:3rem;margin-top:3rem}
+.contact-group{display:flex;flex-direction:column;gap:.6rem}
+.label{font-size:.72rem;text-transform:uppercase;letter-spacing:.22em;color:#9a9a9a;font-weight:500}
+.contact-group a,.contact-group span:not(.label){color:#f0f0f0;text-decoration:none;font-size:1.05rem;line-height:1.5;transition:color .25s}
+.contact-group a:hover{color:#e60000}
+
+/* ---- Tablet & Handy: Würfel in die Ecke, Titel darf volle Breite nutzen ---- */
+@media(max-width:1100px){
   nav{padding:1.2rem 1.5rem}
   .nav-toggle{display:flex}
   .nav-links{position:fixed;top:0;right:0;height:100vh;width:min(78vw,320px);flex-direction:column;background:rgba(10,10,10,.98);backdrop-filter:blur(20px);padding:6rem 2rem;gap:1.6rem;font-size:.85rem;letter-spacing:.18em;transform:translateX(100%);transition:transform .4s ease;border-left:1px solid rgba(255,255,255,.06);align-items:flex-start}
   .nav-links.open{transform:translateX(0)}
   section{padding:6rem 1.5rem}
   .hero{padding:0 1.5rem}
-  .dice-wrapper{right:-38%;width:120vw;height:120vw;opacity:.5}
+  /* Würfel in die untere rechte Ecke, dezent */
+  .dice-wrapper{top:auto;bottom:-12vw;right:-12vw;width:min(55vw,480px);height:min(55vw,480px);transform:rotate(55deg);opacity:.45}
+  /* Hero darf volle Breite – Titel skaliert über vw */
+  .hero-inner{max-width:100%}
+  .brand-title{font-size:clamp(2.5rem, 11vw, 6.5rem)}
   #projects .container,#contact .container{margin-left:0;margin-right:auto;text-align:left}
   #projects .prose{margin-left:0}
   #contact .contact-grid{text-align:left;margin-left:0;grid-template-columns:1fr;gap:2rem}
   #contact .contact-group{align-items:flex-start}
 }
-@media(max-width:560px){.nav-brand{font-size:.9rem}.brand-title{font-size:clamp(2.8rem,15vw,4rem)}footer{flex-direction:column;gap:1rem;align-items:flex-start}}
+@media(max-width:560px){.nav-brand{font-size:.9rem}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.brand-title:before,.brand-title:after{animation:none}}
 </style>
 </head>
@@ -45,18 +73,17 @@ section{min-height:100vh;display:flex;align-items:center;padding:7rem 3rem;posit
   <div class="nav-links" id="navLinks"><a href="#home" data-target="home" class="active">Home</a><a href="#work" data-target="work">Work</a><a href="#projects" data-target="projects">Projects</a><a href="#about" data-target="about">About</a><a href="#guides" data-target="guides">Guides</a><a href="#contact" data-target="contact">Contact</a></div>
 </nav>
 <div class="dice-wrapper" aria-hidden="true"><svg class="dice-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="160" height="160" rx="20"/><circle class="dice-dot" cx="65" cy="60" r="14"/><circle class="dice-dot" cx="135" cy="60" r="14"/><circle class="dice-dot" cx="65" cy="100" r="14"/><circle class="dice-dot" cx="135" cy="100" r="14"/><circle class="dice-dot" cx="65" cy="140" r="14"/><circle class="dice-dot" cx="135" cy="140" r="14"/></svg></div>
-<section class="hero" id="home"><div class="container"><div class="hero-inner"><h1 class="brand-title" data-text="STAATSRAT">STAATSRAT</h1><p class="subtitle">Security research. Open source contributions.</p><div class="links"><a href="https://github.com/Staatsrat" target="_blank" rel="noopener">GitHub</a><a href="https://x.com/staatsratx" target="_blank" rel="noopener">X</a></div></div></div></section>
+<section class="hero" id="home"><div class="container"><div class="hero-inner"><h1 class="brand-title" data-text="STAATSRAT">STAATS<span class="mark">RAT</span></h1><p class="subtitle">Security research. Open source contributions.</p><div class="links"><a href="https://github.com/Staatsrat" target="_blank" rel="noopener">GitHub</a><a href="https://x.com/staatsratx" target="_blank" rel="noopener">X</a></div></div></div></section>
 <section id="work"><div class="container"><h2 class="section-title">Selected Work</h2><div class="project-list"><div class="project-item"><a class="project-name" href="https://github.com/Staatsrat/icmp_communication" target="_blank" rel="noopener">icmp_communication</a><span class="project-desc">Covert communication channel over ICMP packet sizes. Instructions are encoded in the echo request length — no payload needed.</span></div><div class="project-item"><a class="project-name" href="https://github.com/Staatsrat/tor_keep" target="_blank" rel="noopener">tor_keep</a><span class="project-desc">Tor connection monitoring and keep-alive utility.</span></div></div></div></section>
 <section id="projects"><div class="container"><h2 class="section-title">Projects</h2><p class="prose">Active learning journey toward the eLearnSecurity Junior Penetration Tester certification. Currently implementing encryption mechanisms for <strong>icmp_communication</strong> to enhance command obfuscation and developing additional security research tools.</p></div></section>
 <section id="about"><div class="container"><h2 class="section-title">About me</h2><p class="prose">Love testing things, ways they break, how they broke, and how to do it again with less effort.</p></div></section>
 <section id="guides"><div class="container"><h2 class="section-title">Guides</h2><p class="prose">Write-ups and practical guides — click an entry to expand it.</p><div class="guide-list"><div class="guide" data-md="Guide/golden_vm.md"><button class="guide-header" type="button" aria-expanded="false"><span><span class="guide-title">Golden VM</span><span class="guide-desc">A practical guide for creating an isolated Windows malware-analysis environment with Hyper-V.</span></span><span class="guide-toggle" aria-hidden="true"></span></button><div class="guide-body"><div class="guide-body-inner"><div class="guide-content"></div></div></div></div></div></div></section>
-<section id="contact"><div class="container"><h2 class="section-title">Contact</h2><div class="contact-grid"><div class="contact-group"><span class="label">Email</span><span>mail@staatsrat.me</span></div><div class="contact-group"><span class="label">Web</span><a href="https://staatsrat.me">staatsrat.me</a></div><div class="contact-group"><span class="label">Social</span><a href="https://x.com/staatsratx">x.com/staatsratx</a><a href="https://www.reddit.com/user/staatsrat/">reddit.com/user/staatsrat</a><a href="https://www.youtube.com/@staatsrat">youtube.com/@staatsrat</a></div></div><footer><span>© <span id="year"></span> STAATSRAT</span><a href="#home">↑ Back to top</a></footer></div></section>
+<section id="contact"><div class="container"><h2 class="section-title">Contact</h2><div class="contact-grid"><div class="contact-group"><span class="label">Email</span><span>mail@staatsrat.me</span></div><div class="contact-group"><span class="label">Web</span><a href="https://staatsrat.me">staatsrat.me</a></div><div class="contact-group"><span class="label">Social</span><a href="https://x.com/staatsratx">x.com/staatsratx</a><a href="https://www.reddit.com/user/staatsrat/">reddit.com/user/staatsrat</a><a href="https://www.youtube.com/@staatsrat">youtube.com/@staatsrat</a></div></div></div></section>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script><script>
 document.addEventListener('DOMContentLoaded',()=>{
   const navLinks=document.querySelectorAll('.nav-links a');
   const navToggle=document.querySelector('.nav-toggle');
   const navLinksContainer=document.querySelector('.nav-links');
-  document.getElementById('year').textContent=new Date().getFullYear();
   navToggle.addEventListener('click',()=>{
     const open=navLinksContainer.classList.toggle('open');
     navToggle.classList.toggle('open',open);
