@@ -60,47 +60,88 @@ a:hover { color: var(--red); }
   padding: 1.8rem 0 0;
 }
 
-.die-btn {
+.die-wrap {
   flex: none;
-  background: none;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-  display: block;
-  line-height: 0;
-  border-radius: 22%;
-}
-
-.die-btn:focus-visible {
-  outline: 2px solid var(--fg);
-  outline-offset: 4px;
-}
-
-.die {
   width: var(--die-w);
   height: var(--die-w);
-  display: block;
+  cursor: pointer;
+}
+
+.die-rotator {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--fg);
+  border-radius: 22%;
   transform-origin: center;
-  will-change: transform;
 }
 
-.die.rolling {
-  animation: die-roll 1.4s cubic-bezier(.15,.9,.3,1) forwards;
+.dot {
+  position: absolute;
+  width: 15%;
+  height: 15%;
+  border-radius: 50%;
+  background: var(--bg);
 }
 
-@keyframes die-roll {
-  0%   { transform: rotate(0deg)    scale(1);    }
-  15%  { transform: rotate(160deg)  scale(1.18); }
-  35%  { transform: rotate(500deg)  scale(0.88); }
-  55%  { transform: rotate(760deg)  scale(1.12); }
-  75%  { transform: rotate(950deg)  scale(0.95); }
-  90%  { transform: rotate(1050deg) scale(1.03); }
-  100% { transform: rotate(1080deg) scale(1);    }
+.pos-tl { top: 17.5%;    left: 17.5%;  }
+.pos-tr { top: 17.5%;    right: 17.5%; }
+.pos-bl { bottom: 17.5%; left: 17.5%;  }
+.pos-br { bottom: 17.5%; right: 17.5%; }
+.pos-ml { top: 42.5%;    left: 17.5%;  }
+.pos-mr { top: 42.5%;    right: 17.5%; }
+.dot-c  { top: 42.5%;    left: 42.5%; background: var(--red); }
+
+.dot-c { opacity: 1; }
+.dot-a { opacity: 1; }
+.dot-b { opacity: 1; }
+.dot-m { opacity: 0; }
+
+.die-wrap:hover .die-rotator,
+.die-wrap:active .die-rotator {
+  animation: roll-rotate 1.4s cubic-bezier(.15,.9,.3,1) forwards;
 }
 
-.die-body    { fill: var(--fg); }
-.die-dot     { fill: var(--bg); transition: opacity .05s linear; }
-.die-dot.red { fill: var(--red); }
+.die-wrap:hover .dot-c,
+.die-wrap:active .dot-c { animation: roll-c 1.4s linear forwards; }
+
+.die-wrap:hover .dot-a,
+.die-wrap:active .dot-a { animation: roll-a 1.4s linear forwards; }
+
+.die-wrap:hover .dot-b,
+.die-wrap:active .dot-b { animation: roll-b 1.4s linear forwards; }
+
+.die-wrap:hover .dot-m,
+.die-wrap:active .dot-m { animation: roll-m 1.4s linear forwards; }
+
+@keyframes roll-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(1080deg); }
+}
+
+@keyframes roll-c {
+  0%,     16.66% { opacity: 1; }
+  16.67%, 33.32% { opacity: 0; }
+  33.33%, 49.99% { opacity: 1; }
+  50%,    66.66% { opacity: 0; }
+  66.67%, 83.32% { opacity: 1; }
+  83.33%, 100%   { opacity: 0; }
+}
+
+@keyframes roll-a {
+  0%,     16.66% { opacity: 0; }
+  16.67%, 100%   { opacity: 1; }
+}
+
+@keyframes roll-b {
+  0%,     49.99% { opacity: 0; }
+  50%,    100%   { opacity: 1; }
+}
+
+@keyframes roll-m {
+  0%,     83.32% { opacity: 0; }
+  83.33%, 100%   { opacity: 1; }
+}
 
 .navigation { flex: 1; min-width: 0; padding-top: 0.5rem; }
 
@@ -127,6 +168,7 @@ a:hover { color: var(--red); }
 .page { display: none; padding-bottom: 2rem; }
 .page:target { display: block; }
 body:not(:has(.page:target)) #home { display: block; }
+.page:not(#home) { padding-top: 4rem; }
 
 .page-head { padding: 0; }
 
@@ -274,6 +316,7 @@ body:has(#home:target) .site-foot { display: block; }
     gap: 0.4rem 1.6rem;
   }
   .navigation a { font-size: 0.86rem; }
+  .page:not(#home) { padding-top: 2.5rem; }
   .page-head-logo { padding: 2.5rem 0 2rem; }
   .page-head-logo pre { font-size: clamp(0.14rem, 0.95vw, 0.5rem); }
   .page-head-description { margin-top: 1.5rem; }
@@ -286,18 +329,17 @@ body:has(#home:target) .site-foot { display: block; }
 <div class="site-wrapper">
 
   <header class="site-head">
-    <button class="die-btn" id="dieBtn" aria-label="Roll the die" type="button">
-      <svg class="die" id="die" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <rect class="die-body" x="4" y="4" width="92" height="92" rx="20"/>
-        <circle class="die-dot red" id="dd5" cx="50" cy="50" r="7"/>
-        <circle class="die-dot"     id="dd1" cx="28" cy="28" r="7"/>
-        <circle class="die-dot"     id="dd3" cx="72" cy="28" r="7"/>
-        <circle class="die-dot"     id="dd4" cx="28" cy="50" r="7"/>
-        <circle class="die-dot"     id="dd6" cx="72" cy="50" r="7"/>
-        <circle class="die-dot"     id="dd7" cx="28" cy="72" r="7"/>
-        <circle class="die-dot"     id="dd9" cx="72" cy="72" r="7"/>
-      </svg>
-    </button>
+    <div class="die-wrap" aria-hidden="true">
+      <div class="die-rotator">
+        <span class="dot dot-c"></span>
+        <span class="dot dot-a pos-tl"></span>
+        <span class="dot dot-a pos-br"></span>
+        <span class="dot dot-b pos-tr"></span>
+        <span class="dot dot-b pos-bl"></span>
+        <span class="dot dot-m pos-ml"></span>
+        <span class="dot dot-m pos-mr"></span>
+      </div>
+    </div>
 
     <nav class="navigation" aria-label="Main">
       <ul>
@@ -457,57 +499,6 @@ body:has(#home:target) .site-foot { display: block; }
   </footer>
 
 </div>
-
-<script>
-(function () {
-  const die = document.getElementById('die');
-  const btn = document.getElementById('dieBtn');
-
-  const positions = ['dd1','dd3','dd4','dd5','dd6','dd7','dd9'];
-
-  const faces = {
-    1: ['dd5'],
-    2: ['dd1', 'dd9'],
-    3: ['dd1', 'dd5', 'dd9'],
-    4: ['dd1', 'dd3', 'dd7', 'dd9'],
-    5: ['dd1', 'dd3', 'dd5', 'dd7', 'dd9'],
-    6: ['dd1', 'dd3', 'dd4', 'dd6', 'dd7', 'dd9']
-  };
-
-  function showFace(n) {
-    positions.forEach(id => { document.getElementById(id).style.opacity = '0'; });
-    faces[n].forEach(id => { document.getElementById(id).style.opacity = '1'; });
-  }
-
-  function randomFace() {
-    const buf = new Uint32Array(1);
-    crypto.getRandomValues(buf);
-    return (buf[0] % 6) + 1;
-  }
-
-  let rolling = false;
-
-  function roll() {
-    if (rolling) return;
-    rolling = true;
-    die.classList.remove('rolling');
-    void die.offsetWidth;
-    die.classList.add('rolling');
-    const flicker = setInterval(() => showFace(randomFace()), 70);
-    setTimeout(() => {
-      clearInterval(flicker);
-      showFace(randomFace());
-      die.classList.remove('rolling');
-      rolling = false;
-    }, 1400);
-  }
-
-  btn.addEventListener('mouseenter', roll);
-  btn.addEventListener('touchstart', roll, { passive: true });
-
-  showFace(3);
-})();
-</script>
 
 </body>
 </html>
