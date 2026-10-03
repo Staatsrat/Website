@@ -170,7 +170,6 @@ a:hover { color: var(--red); }
 body:not(:has(.page:target)) #home { display: block; }
 .page:not(#home) { padding-top: 4rem; }
 
-/* Explizite Sichtbarkeit, wenn Markdown-Route aktiv ist */
 body.md-view #guides { display: block; }
 body.md-view .page:not(#guides) { display: none; }
 
@@ -282,7 +281,6 @@ body.md-view .page:not(#guides) { display: none; }
 .contact-group a:hover { text-decoration-color: var(--red); }
 .contact-group a.onion-link { color: var(--onion); }
 
-/* --- Markdown Viewer --- */
 .md-viewer {
   margin-left: var(--offset);
   max-width: 760px;
@@ -405,13 +403,16 @@ body.md-view .page:not(#guides) { display: none; }
 }
 .md-back:hover { color: var(--red); text-decoration-color: var(--red); }
 
-.md-loading,
-.md-error {
+.md-loading {
   font-style: italic;
   color: var(--muted);
 }
 
-.md-error { color: var(--red); font-style: normal; font-weight: 700; }
+.md-error {
+  color: var(--red);
+  font-style: normal;
+  font-weight: 700;
+}
 
 .site-foot {
   padding: 3rem 0 1rem;
@@ -644,13 +645,13 @@ body:has(#home:target) .site-foot { display: block; }
 (function () {
   "use strict";
 
-  var MD_FILE = "Guide/golden-vm.md";
+  var MD_FILE = "Guide/golden_vm.md";
   var ROUTE   = "#guides/golden-vm";
 
   var viewer = document.getElementById("markdown-viewer");
 
-  function show(el)  { el.style.display = "block"; }
-  function hide(el)  { el.style.display = "none";  }
+  function show(el) { el.style.display = "block"; }
+  function hide(el) { el.style.display = "none"; }
 
   function hideAllPages() {
     document.querySelectorAll(".page").forEach(hide);
@@ -670,7 +671,6 @@ body:has(#home:target) .site-foot { display: block; }
     if (window.marked && typeof window.marked.parse === "function") {
       return window.marked.parse(md);
     }
-    // Minimaler Fallback, falls marked nicht geladen wurde
     var escaped = md
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
@@ -679,7 +679,7 @@ body:has(#home:target) .site-foot { display: block; }
   }
 
   function loadMarkdown() {
-    viewer.innerHTML = '<p class="md-loading">Lade Guide …</p>';
+    viewer.innerHTML = '<p class="md-loading">Loading guide…</p>';
     viewer.style.display = "block";
 
     fetch(MD_FILE, { cache: "no-cache" })
@@ -689,23 +689,18 @@ body:has(#home:target) .site-foot { display: block; }
       })
       .then(function (md) {
         var back = '<a class="md-back" href="#guides">← Back to Guides</a>';
-        var html = renderMarkdown(md);
-        viewer.innerHTML = back + html;
+        viewer.innerHTML = back + renderMarkdown(md);
 
-        // Externe Links im Markdown in neuem Tab öffnen
         viewer.querySelectorAll('a[href^="http"]').forEach(function (a) {
           a.setAttribute("target", "_blank");
           a.setAttribute("rel", "noopener");
         });
 
-        // Intra-Seiten Links (z. B. #guides) normalisieren
-        viewer.querySelectorAll('a[href^="#"]').forEach(function (a) {
-          if (a.getAttribute("href") === "#guides") {
-            a.addEventListener("click", function (e) {
-              e.preventDefault();
-              location.hash = "#guides";
-            });
-          }
+        viewer.querySelectorAll('a[href="#guides"]').forEach(function (a) {
+          a.addEventListener("click", function (e) {
+            e.preventDefault();
+            location.hash = "#guides";
+          });
         });
 
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -713,9 +708,8 @@ body:has(#home:target) .site-foot { display: block; }
       .catch(function (err) {
         viewer.innerHTML =
           '<a class="md-back" href="#guides">← Back to Guides</a>' +
-          '<p class="md-error">Fehler beim Laden: ' + err.message + '</p>' +
-          '<p>Stelle sicher, dass die Datei <code>' + MD_FILE + '</code> existiert ' +
-          'und die Seite über einen Webserver (nicht <code>file://</code>) aufgerufen wird.</p>';
+          '<p class="md-error">Failed to load guide: ' + err.message + '</p>' +
+          '<p>Make sure the file <code>' + MD_FILE + '</code> exists and the site is served over HTTP (not <code>file://</code>).</p>';
       });
   }
 
