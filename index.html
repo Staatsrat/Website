@@ -74,6 +74,7 @@ a:hover { color: var(--red); }
   background: var(--fg);
   border-radius: 22%;
   transform-origin: center;
+  will-change: transform;
 }
 
 .dot {
@@ -92,56 +93,19 @@ a:hover { color: var(--red); }
 .pos-mr { top: 42.5%;    right: 17.5%; }
 .dot-c  { top: 42.5%;    left: 42.5%; background: var(--red); }
 
-.dot-c { opacity: 1; }
-.dot-a { opacity: 1; }
-.dot-b { opacity: 1; }
-.dot-m { opacity: 0; }
-
-.die-wrap:hover .die-rotator,
-.die-wrap:active .die-rotator {
-  animation: roll-rotate 1.4s cubic-bezier(.15,.9,.3,1) forwards;
-}
-
-.die-wrap:hover .dot-c,
-.die-wrap:active .dot-c { animation: roll-c 1.4s linear forwards; }
-
-.die-wrap:hover .dot-a,
-.die-wrap:active .dot-a { animation: roll-a 1.4s linear forwards; }
-
-.die-wrap:hover .dot-b,
-.die-wrap:active .dot-b { animation: roll-b 1.4s linear forwards; }
-
-.die-wrap:hover .dot-m,
-.die-wrap:active .dot-m { animation: roll-m 1.4s linear forwards; }
-
-@keyframes roll-rotate {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(1080deg); }
-}
-
-@keyframes roll-c {
-  0%,     16.66% { opacity: 1; }
-  16.67%, 33.32% { opacity: 0; }
-  33.33%, 49.99% { opacity: 1; }
-  50%,    66.66% { opacity: 0; }
-  66.67%, 83.32% { opacity: 1; }
-  83.33%, 100%   { opacity: 0; }
-}
-
-@keyframes roll-a {
-  0%,     16.66% { opacity: 0; }
-  16.67%, 100%   { opacity: 1; }
-}
-
-@keyframes roll-b {
-  0%,     49.99% { opacity: 0; }
-  50%,    100%   { opacity: 1; }
-}
-
-@keyframes roll-m {
-  0%,     83.32% { opacity: 0; }
-  83.33%, 100%   { opacity: 1; }
-}
+.die-rotator .dot { opacity: 0; }
+.die-rotator.face-1 .dot-c { opacity: 1; }
+.die-rotator.face-2 .dot-a { opacity: 1; }
+.die-rotator.face-3 .dot-a,
+.die-rotator.face-3 .dot-c { opacity: 1; }
+.die-rotator.face-4 .dot-a,
+.die-rotator.face-4 .dot-b { opacity: 1; }
+.die-rotator.face-5 .dot-a,
+.die-rotator.face-5 .dot-b,
+.die-rotator.face-5 .dot-c { opacity: 1; }
+.die-rotator.face-6 .dot-a,
+.die-rotator.face-6 .dot-b,
+.die-rotator.face-6 .dot-m { opacity: 1; }
 
 .navigation { flex: 1; min-width: 0; padding-top: 0.5rem; }
 
@@ -468,7 +432,7 @@ body:has(#home:target) .site-foot { display: block; }
 
   <header class="site-head">
     <div class="die-wrap" aria-hidden="true">
-      <div class="die-rotator">
+      <div class="die-rotator face-1">
         <span class="dot dot-c"></span>
         <span class="dot dot-a pos-tl"></span>
         <span class="dot dot-a pos-br"></span>
@@ -616,6 +580,10 @@ body:has(#home:target) .site-foot { display: block; }
         <a href="https://x.com/staatsratx" target="_blank" rel="noopener">x.com/staatsratx</a>
       </div>
       <div class="contact-group">
+        <span class="label">TikTok</span>
+        <a href="https://www.tiktok.com/@staatsrat" target="_blank" rel="noopener">tiktok.com/@staatsrat</a>
+      </div>
+      <div class="contact-group">
         <span class="label">Reddit</span>
         <a href="https://www.reddit.com/user/staatsrat/" target="_blank" rel="noopener">reddit.com/user/staatsrat</a>
       </div>
@@ -630,6 +598,7 @@ body:has(#home:target) .site-foot { display: block; }
     <div class="footer-links">
       <a href="https://github.com/Staatsrat" target="_blank" rel="noopener">GitHub</a>
       <a href="https://x.com/staatsratx" target="_blank" rel="noopener">X</a>
+      <a href="https://www.tiktok.com/@staatsrat" target="_blank" rel="noopener">TikTok</a>
       <a href="https://www.reddit.com/user/staatsrat/" target="_blank" rel="noopener">Reddit</a>
       <a href="https://www.youtube.com/@staatsrat" target="_blank" rel="noopener">YouTube</a>
       <a href="mailto:mail@staatsrat.me">Email</a>
@@ -682,7 +651,7 @@ body:has(#home:target) .site-foot { display: block; }
 
     fetch(MD_FILE, { cache: "no-cache" })
       .then(function (res) {
-        if (!res.ok) throw new Error("HTTP " + res.status + " — " + MD_FILE);
+        if (!res.ok) throw new Error("HTTP " + res.status);
         return res.text();
       })
       .then(function (md) {
@@ -703,11 +672,10 @@ body:has(#home:target) .site-foot { display: block; }
 
         window.scrollTo({ top: 0, behavior: "smooth" });
       })
-      .catch(function (err) {
+      .catch(function () {
         viewer.innerHTML =
           '<a class="md-back" href="#guides">← Back to Guides</a>' +
-          '<p class="md-error">Failed to load guide: ' + err.message + '</p>' +
-          '<p>Make sure the file <code>' + MD_FILE + '</code> exists and the site is served over HTTP (not <code>file://</code>).</p>';
+          '<p class="md-error">Guide unavailable.</p>';
       });
   }
 
@@ -733,6 +701,137 @@ body:has(#home:target) .site-foot { display: block; }
   } else {
     route();
   }
+})();
+</script>
+
+<script>
+(function () {
+  "use strict";
+
+  var dieWrap = document.querySelector(".die-wrap");
+  var rotator = document.querySelector(".die-rotator");
+  if (!dieWrap || !rotator) return;
+
+  var ROLL_VELOCITY        = 720;
+  var SETTLE_DURATION      = 1500;
+  var FACE_CHANGE_INTERVAL = 55;
+
+  var state           = "idle";
+  var rotation        = 0;
+  var faceTimer       = 0;
+  var lastTimestamp   = 0;
+  var loopActive      = false;
+  var settleStartTime = 0;
+  var settleStartRot  = 0;
+  var settleTargetRot = 0;
+
+  function randomFace() {
+    var buf = new Uint32Array(1);
+    if (window.crypto && window.crypto.getRandomValues) {
+      window.crypto.getRandomValues(buf);
+    } else {
+      buf[0] = Math.floor(Math.random() * 4294967296);
+    }
+    return 1 + (buf[0] % 6);
+  }
+
+  function setFace(n) {
+    for (var i = 1; i <= 6; i++) rotator.classList.remove("face-" + i);
+    rotator.classList.add("face-" + n);
+  }
+
+  function startLoop() {
+    if (loopActive) return;
+    loopActive = true;
+    lastTimestamp = 0;
+    requestAnimationFrame(tick);
+  }
+
+  function tick(timestamp) {
+    if (!lastTimestamp) lastTimestamp = timestamp;
+    var dt = (timestamp - lastTimestamp) / 1000;
+    if (dt > 0.1) dt = 0.1;
+    lastTimestamp = timestamp;
+
+    if (state === "rolling") {
+      rotation += ROLL_VELOCITY * dt;
+      rotator.style.transform = "rotate(" + rotation + "deg)";
+
+      faceTimer += dt * 1000;
+      if (faceTimer >= FACE_CHANGE_INTERVAL) {
+        faceTimer -= FACE_CHANGE_INTERVAL;
+        setFace(randomFace());
+      }
+      requestAnimationFrame(tick);
+
+    } else if (state === "settling") {
+      var elapsed = timestamp - settleStartTime;
+      var t = elapsed / SETTLE_DURATION;
+      if (t > 1) t = 1;
+      var eased = 1 - Math.pow(1 - t, 3);
+      rotation = settleStartRot + (settleTargetRot - settleStartRot) * eased;
+      rotator.style.transform = "rotate(" + rotation + "deg)";
+
+      faceTimer += dt * 1000;
+      var interval = FACE_CHANGE_INTERVAL + t * 500;
+      if (faceTimer >= interval && t < 0.9) {
+        faceTimer -= interval;
+        setFace(randomFace());
+      }
+
+      if (t < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        state = "idle";
+        loopActive = false;
+        rotation = settleTargetRot;
+        rotator.style.transform = "rotate(" + rotation + "deg)";
+        setFace(randomFace());
+      }
+
+    } else {
+      loopActive = false;
+    }
+  }
+
+  function startRolling() {
+    if (state === "rolling") return;
+    state = "rolling";
+    faceTimer = 0;
+    startLoop();
+  }
+
+  function startSettling() {
+    if (state === "idle" || state === "settling") return;
+    state = "settling";
+    settleStartTime = performance.now();
+    settleStartRot = rotation;
+
+    var currentMod = ((rotation % 360) + 360) % 360;
+    var base = rotation - currentMod;
+    var extraTurns = 2 + Math.floor(Math.random() * 3);
+    settleTargetRot = base + extraTurns * 360;
+
+    faceTimer = 0;
+    startLoop();
+  }
+
+  dieWrap.addEventListener("mouseenter", startRolling);
+  dieWrap.addEventListener("mouseleave", startSettling);
+
+  dieWrap.addEventListener("touchstart", function () {
+    startRolling();
+  }, { passive: true });
+
+  dieWrap.addEventListener("touchend", function () {
+    startSettling();
+  }, { passive: true });
+
+  dieWrap.addEventListener("touchcancel", function () {
+    startSettling();
+  }, { passive: true });
+
+  setFace(randomFace());
 })();
 </script>
 
