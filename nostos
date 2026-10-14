@@ -1,1 +1,1 @@
-mkdir good
+echo "number" >> log.txt
