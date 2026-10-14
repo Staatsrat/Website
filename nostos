@@ -1,1 +1,1 @@
-echo "even" >> log.txt
+echo "broken?" >> log.txt
