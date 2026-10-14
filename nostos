@@ -1,1 +1,1 @@
-set_time(1)
+echo "AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH" > log.txt
