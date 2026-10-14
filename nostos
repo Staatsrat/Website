@@ -1,1 +1,1 @@
-echo Idontthinkso!" >> log.txt
+echo "Idontthinkso!" >> log.txt
