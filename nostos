@@ -1,1 +1,1 @@
-echo "Idont" >> log.txt
+echo "YES" >> log.txt
