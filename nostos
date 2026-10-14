@@ -1,1 +1,1 @@
-echo "text" >> log.txt
+echo "hello world!!" >> log.txt
