@@ -1,1 +1,1 @@
-echo "Test" >> log.txt
+set_time(1)
