@@ -1,1 +1,1 @@
-stop_nostos
+echo "stop_nostos now is beaing used" >> log.txt
