@@ -1,1 +1,1 @@
-stop_nostos
+echo "hi" >> log.txt
