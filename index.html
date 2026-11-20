@@ -245,6 +245,16 @@ body.md-view .page:not(#guides) { display: none; }
 .contact-group a:hover { text-decoration-color: var(--red); }
 .contact-group a.onion-link { color: var(--onion); }
 
+.page-head-logo pre {
+  font-family: "DejaVu Sans Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  line-height: 1;            /* keine Lücken zwischen den Zeilen */
+  letter-spacing: 0;
+  white-space: pre;          /* nie umbrechen */
+  margin: 0;
+  font-size: min(0.62vw, 9px); /* passt die ~150 Zeichen an die Bildschirmbreite an */
+  overflow: hidden;
+}
+
 .md-viewer {
   margin-left: var(--offset);
   max-width: 760px;
