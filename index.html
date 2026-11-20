@@ -150,16 +150,17 @@ body.md-view .page:not(#guides) { display: none; }
 }
 
 .page-head-logo pre {
-  font-family: var(--font);
-  font-size: clamp(0.2rem, 0.78vw, 1.9rem);
-  line-height: 1.02;
-  font-weight: 700;
-  letter-spacing: 0.005em;
+  font-family: "DejaVu Sans Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: min(1.05vw, 13px); 
+  line-height: 1;
+  letter-spacing: 0;
   white-space: pre;
-  text-align: center;
-  color: var(--fg);
-  margin: 0;
+  margin: 0 auto;
+  width: max-content;       
+  max-width: 100%;
   overflow: hidden;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
 }
 
 .page-head-description {
